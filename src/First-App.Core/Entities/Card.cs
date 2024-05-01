@@ -21,5 +21,5 @@ public class Card : BaseEntity,
 
     public Priority? Priority { get; set; }
 
-    public List<Action> ChangeHistory { get; set; } = [];
+    public List<Change> ChangeHistory { get; set; } = [];
 }

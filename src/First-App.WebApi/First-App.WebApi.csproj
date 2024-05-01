@@ -7,9 +7,11 @@
         <InvariantGlobalization>true</InvariantGlobalization>
         <RootNamespace>First_App.WebApi</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>71f7df99-b7f4-43ee-824a-37428c4e6a9c</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
@@ -21,6 +23,11 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\First-App.Application\First-App.Application.csproj" />
+      <ProjectReference Include="..\First-App.Infrastructure\First-App.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -2,17 +2,17 @@
 
 namespace First_App.Core.Entities;
 
-public class Action : BaseEntity
+public class Change : BaseEntity
 {
     public DateTime Time { get; set; }
 
     public int TypeId { get; set; }
 
-    public int CardId { get; set; }
+    public int AffectedCardId { get; set; }
 
     public Card? AffectedCard { get; set; }
 
-    public ActionType? Type { get; set; }
+    public ChangeType? Type { get; set; }
 
-    public List<ActionParameter> Parameters { get; set; } = [];
+    public List<ChangeParameter> Parameters { get; set; } = [];
 }

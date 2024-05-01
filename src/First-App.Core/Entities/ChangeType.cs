@@ -2,9 +2,9 @@
 
 namespace First_App.Core.Entities;
 
-public class ActionType : BaseEntity
+public class ChangeType : BaseEntity
 {
     public string Name { get; set; } = default!;
 
-    public List<Action> Actions { get; set; } = [];
+    public List<Change> Changes { get; set; } = [];
 }
