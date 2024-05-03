@@ -8,14 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Commands\GroupList\" />
       <Folder Include="Common\Dtos\" />
-      <Folder Include="Common\Mapping\" />
       <Folder Include="Queries\" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Ardalis.Result.AspNetCore" Version="8.0.0" />
       <PackageReference Include="Ardalis.Result.FluentValidation" Version="7.2.0" />
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="FluentValidation" Version="11.9.1" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
       <PackageReference Include="MediatR" Version="12.2.0" />
@@ -23,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\First-App.Infrastructure\First-App.Infrastructure.csproj" />
+      <ProjectReference Include="..\First-App.Shared\First-App.Shared.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,22 +1,24 @@
+using First_App.Application;
 using First_App.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// TODO: Extract to extension method
 string? connectionString = builder.Configuration.GetConnectionString("LocalInstance");
 ArgumentNullException.ThrowIfNullOrEmpty(connectionString);
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddAppDbContext(connectionString);
+builder.Services.AddFluentValidators();
+builder.Services.AddMapping();
+builder.Services.AddHandlersAndBehaviour();
+builder.Services.AddMapping();
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -25,8 +27,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapControllers().RequireCors();
 
 app.Run();

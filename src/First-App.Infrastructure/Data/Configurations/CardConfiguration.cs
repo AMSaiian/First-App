@@ -9,6 +9,8 @@ public class CardConfiguration : BaseEntityConfiguration<Card>
     {
         base.Configure(builder);
 
+        builder.HasQueryFilter(card => !card.IsDeleted);
+
         builder.Property(card => card.Name)
             .HasMaxLength(DataSchemeConstants.MaxNameLength);
 
