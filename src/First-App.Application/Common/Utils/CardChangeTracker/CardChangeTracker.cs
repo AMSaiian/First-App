@@ -70,7 +70,7 @@ public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
         }
 
         return !isChanged
-            ? Result.Conflict(ErrorIdentifiers.NoChangesProvided)
+            ? Result.Error(ErrorIdentifiers.NoChangesProvided)
             : Result.Success();
     }
 
@@ -178,7 +178,7 @@ public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
                        cancellationToken);
 
         if (newPriorityEntity is null)
-            return Result.NotFound(nameof(Priority));
+            return Result.Conflict(nameof(Priority));
 
         await _context.Cards
             .Entry(entity)
@@ -219,7 +219,7 @@ public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
                        cancellationToken);
 
         if (newGroupListEntity is null)
-            return Result.NotFound(nameof(GroupList));
+            return Result.Conflict(nameof(GroupList));
 
         await _context.Cards
             .Entry(entity)

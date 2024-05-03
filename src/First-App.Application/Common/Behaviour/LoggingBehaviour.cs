@@ -28,7 +28,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<LoggingBehaviour<TReq
                 break;
 
             case ResultStatus.Invalid:
-                _logger.LogInformation("Processed {@Parameters} shortly with validation errors {Errors}",
+                _logger.LogInformation("Processed {@Parameters} shortly with validation errors {@Errors}",
                                        request,
                                        result.ValidationErrors);
                 break;
@@ -36,7 +36,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<LoggingBehaviour<TReq
             case ResultStatus.NotFound:
             case ResultStatus.Conflict:
             case ResultStatus.Error:
-                _logger.LogWarning("Processed {@Parameters} with business logic error: {Errors}",
+                _logger.LogWarning("Processed {@Parameters} with business logic error: {@Errors}",
                                    request,
                                    result.Errors);
                 break;

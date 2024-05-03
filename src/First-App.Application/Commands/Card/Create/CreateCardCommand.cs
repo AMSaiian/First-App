@@ -30,13 +30,13 @@ public class CreateCardHandler(AppDbContext context,
             .AnyAsync(p => p.Id == request.PriorityId,
                       cancellationToken);
         if (!isPriorityExist)
-            return Result<int>.NotFound(nameof(Priority));
+            return Result<int>.Conflict(nameof(Priority));
 
         bool isGroupExist = await _context.GroupLists
             .AnyAsync(gl => gl.Id == request.GroupId,
                       cancellationToken);
         if (!isGroupExist)
-            return Result<int>.NotFound(nameof(GroupList));
+            return Result<int>.Conflict(nameof(GroupList));
 
         var newEntity = _mapper.Map<Core.Entities.Card>(request);
         await _tracker.TrackCreate(newEntity, cancellationToken);

@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.FluentValidation;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace First_App.Application.Common.Behaviour;
 
@@ -23,23 +25,32 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
 
             if (validationResult.Exists(vr => !vr.IsValid))
             {
-                var errors = validationResult
-                    .SelectMany(vr => vr.AsErrors())
-                    .ToList();
-
-                return GetValidationResultObject(errors);
+                return GetValidationResultObject(validationResult);
             }
         }
 
         return await next();
     }
 
-    private TResponse GetValidationResultObject(List<ValidationError> errors)
+    private TResponse GetValidationResultObject(IEnumerable<ValidationResult> validationResult)
     {
-        return (TResponse)typeof(Result<>)
-            .MakeGenericType(typeof(TResponse)
-                                 .GetGenericArguments())
-            .GetMethod("Invalid", [typeof(List<ValidationError>)])!
-            .Invoke(null, [errors])!;
+        Type responseType = typeof(TResponse);
+
+        if (responseType.IsGenericType
+         && responseType.GetGenericTypeDefinition() == typeof(Result<>))
+        {
+            var invalidMethod = responseType
+                .GetMethod("Invalid", [typeof(List<ValidationError>)]);
+
+            return (TResponse)invalidMethod!.Invoke(null, [validationResult.SelectMany(vr => vr.AsErrors()).ToList()])!;
+        }
+        else if (responseType == typeof(Result))
+        {
+            return (TResponse)(object)Result.Invalid(validationResult.SelectMany(vr => vr.AsErrors()).ToList());
+        }
+        else
+        {
+            throw new FluentValidation.ValidationException(validationResult.SelectMany(vr => vr.Errors));
+        }
     }
 }
