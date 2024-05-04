@@ -3,7 +3,6 @@ using Ardalis.Result.FluentValidation;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace First_App.Application.Common.Behaviour;
 
@@ -11,6 +10,12 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    private static readonly Type GenericResultType = typeof(Result<>);
+    private static readonly Type GenericPagedResultType = typeof(PagedResult<>);
+    private static readonly Type NonGenericResultType = typeof(Result);
+    private static readonly Type ValidationErrorListType = typeof(List<ValidationError>);
+    private static readonly Type PagedInfoType = typeof(PagedInfo);
+
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     public async Task<TResponse> Handle(TRequest request,
@@ -35,22 +40,42 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
     private TResponse GetValidationResultObject(IEnumerable<ValidationResult> validationResult)
     {
         Type responseType = typeof(TResponse);
+        Type? responseTypeGenericDefinition = responseType.IsGenericType
+            ? responseType.GetGenericTypeDefinition()
+            : default;
 
-        if (responseType.IsGenericType
-         && responseType.GetGenericTypeDefinition() == typeof(Result<>))
+        if (responseTypeGenericDefinition == GenericResultType
+         || responseTypeGenericDefinition == GenericPagedResultType)
         {
-            var invalidMethod = responseType
-                .GetMethod("Invalid", [typeof(List<ValidationError>)]);
+            Type responseTypeGenericArgument = responseType.GetGenericArguments()[0];
 
-            return (TResponse)invalidMethod!.Invoke(null, [validationResult.SelectMany(vr => vr.AsErrors()).ToList()])!;
+            var resolvedGenericType = GenericResultType
+                .MakeGenericType(responseTypeGenericArgument);
+
+            var invalidMethod = resolvedGenericType
+                .GetMethod(nameof(Result<object>.Invalid), [ValidationErrorListType]);
+
+            var responseObject = invalidMethod!
+                .Invoke(null, [validationResult.SelectMany(vr => vr.AsErrors()).ToList()])!;
+
+            if (responseTypeGenericDefinition == GenericPagedResultType)
+            {
+                var toPagedMethod = resolvedGenericType
+                    .GetMethod(nameof(Result<object>.ToPagedResult), [PagedInfoType]);
+
+                responseObject = toPagedMethod!
+                    .Invoke(responseObject, [new PagedInfo(default, default, default, default)]);
+            }
+
+            return (TResponse)responseObject!;
         }
-        else if (responseType == typeof(Result))
+        else if (responseType == NonGenericResultType)
         {
             return (TResponse)(object)Result.Invalid(validationResult.SelectMany(vr => vr.AsErrors()).ToList());
         }
         else
         {
-            throw new FluentValidation.ValidationException(validationResult.SelectMany(vr => vr.Errors));
+            throw new ValidationException(validationResult.SelectMany(vr => vr.Errors));
         }
     }
 }
