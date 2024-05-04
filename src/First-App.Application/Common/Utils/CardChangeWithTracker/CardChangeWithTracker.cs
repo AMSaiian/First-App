@@ -155,7 +155,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
         Change updateChange = new()
         {
-            Time = DateTime.Now,
+            Time = DateTime.Now.ToUniversalTime(),
             Type = changeType,
         };
 

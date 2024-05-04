@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Common\Dtos\" />
-      <Folder Include="Queries\" />
+      <Folder Include="Queries\Card\" />
+      <Folder Include="Queries\GroupList\" />
     </ItemGroup>
 
     <ItemGroup>

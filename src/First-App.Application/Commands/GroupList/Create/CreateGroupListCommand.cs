@@ -15,7 +15,7 @@ public class CreateGroupListHandler(AppDbContext context, IMapper mapper)
 
     public async Task<Result<int>> Handle(CreateGroupListCommand request, CancellationToken cancellationToken)
     {
-        var newEntity = _mapper.Map<Core.Entities.Card>(request);
+        var newEntity = _mapper.Map<Core.Entities.GroupList>(request);
 
         await _context.AddAsync(newEntity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
