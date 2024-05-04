@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\GroupList\" />
       <Folder Include="Common\Dtos\" />
       <Folder Include="Queries\" />
     </ItemGroup>

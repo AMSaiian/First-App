@@ -19,8 +19,9 @@ public class UpdateCardCommandValidator : AbstractValidator<UpdateCardCommand>
                     .NotEmpty();
 
                 RuleFor(command => command.Name)
-                    .MaximumLength(DataSchemeConstants.MaxNameLength)
-                    .When(command => command.Name is not null);
+                    .NotEmpty()
+                    .When(command => command.Name is not null)
+                    .MaximumLength(DataSchemeConstants.MaxNameLength);
 
                 RuleFor(command => command.Description)
                     .MaximumLength(DataSchemeConstants.MaxDescriptionLength)
@@ -29,14 +30,6 @@ public class UpdateCardCommandValidator : AbstractValidator<UpdateCardCommand>
                 RuleFor(command => command.DueDate)
                     .NotEmpty()
                     .When(command => command.DueDate is not null);
-
-                RuleFor(command => command.GroupId)
-                    .NotEmpty()
-                    .When(command => command.GroupId is not null);
-
-                RuleFor(command => command.PriorityId)
-                    .NotEmpty()
-                    .When(command => command.PriorityId is not null);
             });
     }
 }
