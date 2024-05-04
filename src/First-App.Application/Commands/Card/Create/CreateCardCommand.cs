@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
-using First_App.Application.Common.Utils.CardChangeTracker;
+using First_App.Application.Common.Utils.CardChangeWithTracker;
 using First_App.Core.Entities;
 using First_App.Infrastructure.Data;
 using MediatR;
@@ -16,33 +16,24 @@ public record CreateCardCommand(string Name,
     : IRequest<Result<int>>;
 
 public class CreateCardHandler(AppDbContext context,
-                               ICardChangeTracker tracker,
+                               ICardChangeWithTracker cardChanger,
                                IMapper mapper)
     : IRequestHandler<CreateCardCommand, Result<int>>
 {
     private readonly AppDbContext _context = context;
-    private readonly ICardChangeTracker _tracker = tracker;
+    private readonly ICardChangeWithTracker _cardChanger = cardChanger;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<int>> Handle(CreateCardCommand request, CancellationToken cancellationToken)
     {
-        bool isPriorityExist = await _context.Priorities
-            .AnyAsync(p => p.Id == request.PriorityId,
-                      cancellationToken);
-        if (!isPriorityExist)
-            return Result<int>.Conflict(nameof(Priority));
-
-        bool isGroupExist = await _context.GroupLists
-            .AnyAsync(gl => gl.Id == request.GroupId,
-                      cancellationToken);
-        if (!isGroupExist)
-            return Result<int>.Conflict(nameof(GroupList));
-
         var newEntity = _mapper.Map<Core.Entities.Card>(request);
-        await _tracker.TrackCreate(newEntity, cancellationToken);
+        var createResult = await _cardChanger.Create(newEntity, cancellationToken);
+
+        if (!createResult.IsSuccess)
+            return createResult;
+
         await _context.AddAsync(newEntity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-
         return Result.Success(newEntity.Id);
     }
 }

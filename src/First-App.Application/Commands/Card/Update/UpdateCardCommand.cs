@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
-using AutoMapper;
-using First_App.Application.Common.Utils.CardChangeTracker;
+using First_App.Application.Common.Utils.CardChangeWithTracker;
 using First_App.Infrastructure.Data;
 using MediatR;
 
@@ -16,11 +15,11 @@ public record UpdateCardCommand(int Id,
       ICardUpdater;
 
 public class UpdateCardHandler(AppDbContext context,
-                               ICardChangeTracker tracker)
+                               ICardChangeWithTracker cardChanger)
     : IRequestHandler<UpdateCardCommand, Result>
 {
     private readonly AppDbContext _context = context;
-    private readonly ICardChangeTracker _tracker = tracker;
+    private readonly ICardChangeWithTracker _cardChanger = cardChanger;
 
     public async Task<Result> Handle(UpdateCardCommand request, CancellationToken cancellationToken)
     {
@@ -30,8 +29,8 @@ public class UpdateCardHandler(AppDbContext context,
         if (entity is null)
             return Result.NotFound(nameof(entity));
 
-        Result updateResult = await _tracker
-            .TrackUpdate(entity, request, cancellationToken);
+        Result updateResult = await _cardChanger
+            .Update(entity, request, cancellationToken);
 
         if (!updateResult.IsSuccess)
             return updateResult;

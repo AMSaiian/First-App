@@ -1,4 +1,4 @@
-﻿namespace First_App.Application.Common.Utils.CardChangeTracker;
+﻿namespace First_App.Application.Common.Utils.CardChangeWithTracker;
 
 public interface ICardUpdater
 {

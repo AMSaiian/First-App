@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using First_App.Application.Common.Behaviour;
-using First_App.Application.Common.Utils.CardChangeTracker;
+using First_App.Application.Common.Utils.CardChangeWithTracker;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +17,7 @@ public static class ApplicationExtensions
             options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
         });
 
-        services.AddScoped<ICardChangeTracker, CardChangeTracker>();
+        services.AddScoped<ICardChangeWithTracker, CardChangeWithTracker>();
 
         return services;
     }

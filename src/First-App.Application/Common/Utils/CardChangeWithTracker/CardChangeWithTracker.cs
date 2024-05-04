@@ -7,26 +7,61 @@ using First_App.Infrastructure.Data;
 using First_App.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace First_App.Application.Common.Utils.CardChangeTracker;
+namespace First_App.Application.Common.Utils.CardChangeWithTracker;
 
-public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
+public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracker
 {
     private readonly AppDbContext _context = context;
 
-    public async Task TrackCreate(Card entity, CancellationToken cancellationToken)
+    public async Task<Result> Create(Card entity, CancellationToken cancellationToken)
     {
+        List<string> conflictErrorList = [];
+
+        Priority? priorityEntity = await _context.Priorities
+            .FindAsync(entity.PriorityId,
+                       cancellationToken);
+        if (priorityEntity is null)
+            conflictErrorList.Add(nameof(Priority));
+
+        GroupList? groupEntity = await _context.GroupLists
+            .FindAsync(entity.GroupId,
+                       cancellationToken);
+        if (groupEntity is null)
+            conflictErrorList.Add(nameof(GroupList));
+
+        if (conflictErrorList.Count > 0)
+            return Result.Conflict(conflictErrorList.ToArray());
+
+        ChangeParameter[] changeParameters =
+        [
+            new()
+            {
+                Name = ChangeCardParametersNames.MainEntityName,
+                Value = entity.Name
+            },
+            new()
+            {
+                Name = ChangeCardParametersNames.RelatedEntityName,
+                Value = groupEntity!.Name
+            }
+        ];
+
         entity.ChangeHistory
             .Add(await BuildChange(
                      ChangeCardConstants.CreateCard,
-                     cancellationToken)
+                     cancellationToken,
+                     changeParameters)
             );
+
+        return Result.Success();
     }
 
-    public async Task<Result> TrackUpdate(Card entity,
-                                          ICardUpdater updateEntity,
-                                          CancellationToken cancellationToken)
+    public async Task<Result> Update(Card entity,
+                                     ICardUpdater updateEntity,
+                                     CancellationToken cancellationToken)
     {
         bool isChanged = false;
+        List<string> conflictErrorList = [];
 
         if (updateEntity.Name is not null
          && entity.Name != updateEntity.Name)
@@ -56,7 +91,7 @@ public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
                 await ChangePriority(entity, updateEntity.PriorityId.Value, cancellationToken);
 
             if (!intermediateResult.IsSuccess)
-                return intermediateResult;
+                conflictErrorList.AddRange(intermediateResult.Errors);
         }
 
         if (updateEntity.GroupId is not null
@@ -66,20 +101,44 @@ public class CardChangeTracker(AppDbContext context) : ICardChangeTracker
                 await ChangeGroup(entity, updateEntity.GroupId.Value, cancellationToken);
 
             if (!intermediateResult.IsSuccess)
-                return intermediateResult;
+                conflictErrorList.AddRange(intermediateResult.Errors);
         }
 
-        return !isChanged
-            ? Result.Error(ErrorIdentifiers.NoChangesProvided)
-            : Result.Success();
+        if (conflictErrorList.Count > 0)
+            return Result.Conflict(conflictErrorList.ToArray());
+        else if (!isChanged)
+            return Result.Error(ErrorIdentifiers.NoChangesProvided);
+        else 
+            return Result.Success();
     }
 
-    public async Task TrackDelete(Card entity, CancellationToken cancellationToken)
+    public async Task Delete(Card entity, CancellationToken cancellationToken)
     {
+        GroupList? groupEntity = await _context.GroupLists
+            .FindAsync(entity.GroupId,
+                       cancellationToken);
+        if (groupEntity is null)
+            throw new InconsistentStateException();
+
+        ChangeParameter[] changeParameters =
+        [
+            new()
+            {
+                Name = ChangeCardParametersNames.MainEntityName,
+                Value = entity.Name
+            },
+            new()
+            {
+                Name = ChangeCardParametersNames.RelatedEntityName,
+                Value = groupEntity.Name
+            }
+        ];
+
         entity.ChangeHistory
             .Add(await BuildChange(
                      ChangeCardConstants.DeleteCard,
-                     cancellationToken)
+                     cancellationToken,
+                     changeParameters)
             );
     }
 
