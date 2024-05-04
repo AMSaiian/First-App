@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\First-App.Application\First-App.Application.csproj" />
       <ProjectReference Include="..\First-App.Infrastructure\First-App.Infrastructure.csproj" />
     </ItemGroup>

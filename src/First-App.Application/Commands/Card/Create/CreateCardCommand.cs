@@ -1,10 +1,8 @@
 ﻿using Ardalis.Result;
 using AutoMapper;
 using First_App.Application.Common.Utils.CardChangeWithTracker;
-using First_App.Core.Entities;
 using First_App.Infrastructure.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace First_App.Application.Commands.Card.Create;
 
