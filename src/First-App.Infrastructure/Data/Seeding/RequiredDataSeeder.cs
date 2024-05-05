@@ -3,7 +3,7 @@ using First_App.Core.Entities;
 
 namespace First_App.Infrastructure.Data.Seeding;
 
-public class RequiredDataSeeder
+public static class RequiredDataSeeder
 {
     private static readonly List<Priority> Priorities =
     [

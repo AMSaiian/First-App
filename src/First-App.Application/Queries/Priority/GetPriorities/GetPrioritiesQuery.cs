@@ -20,6 +20,7 @@ public class GetPrioritiesHandler(AppDbContext context, IMapper mapper)
                                                         CancellationToken cancellationToken)
     {
         List<Core.Entities.Priority> entities = await _context.Priorities
+            .OrderBy(entity => entity.Id)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 

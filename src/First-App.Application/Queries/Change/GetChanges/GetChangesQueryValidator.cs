@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace First_App.Application.Queries.Change.GetChanges;
 
-public class GetChangesCommandValidator : AbstractValidator<GetChangesCommand>
+public class GetChangesQueryValidator : AbstractValidator<GetChangesQuery>
 {
-    public GetChangesCommandValidator(IValidator<PaginationContext> paginationContextValidator)
+    public GetChangesQueryValidator(IValidator<PaginationContext> paginationContextValidator)
     {
         RuleFor(query => query.PaginationContext)
             .SetValidator(paginationContextValidator)

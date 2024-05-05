@@ -23,6 +23,7 @@ public class GetGroupListsWithCardsHandler(AppDbContext context, IMapper mapper)
                                                                   CancellationToken cancellationToken)
     {
         List<Core.Entities.GroupList> entities = await _context.GroupLists
+            .OrderBy(entity => entity.Name)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
@@ -44,8 +45,10 @@ public class GetGroupListsWithCardsHandler(AppDbContext context, IMapper mapper)
                 _mapper.Map<List<CardDto>>(paginatedCards.Entities),
                 paginatedCards.PagedInfo) ;
 
-            var groupListWithCardDto = _mapper.Map<GroupListWithCardsDto>(entity);
-            _mapper.Map(cardDtosWithPagination, groupListWithCardDto);
+            var groupListWithCardDto =
+                new GroupListWithCardsDto(entity.Id,
+                                          entity.Name,
+                                          cardDtosWithPagination);
             groupListWithCardDtos.Add(groupListWithCardDto);
         }
 

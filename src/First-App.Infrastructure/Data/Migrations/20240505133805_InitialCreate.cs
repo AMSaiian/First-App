@@ -61,7 +61,7 @@ namespace First_App.Infrastructure.Data.Migrations
                     Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: false),
+                    GroupId = table.Column<int>(type: "integer", nullable: true),
                     PriorityId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

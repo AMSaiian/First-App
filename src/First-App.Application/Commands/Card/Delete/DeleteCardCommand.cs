@@ -22,6 +22,7 @@ public class DeleteCardHandler(AppDbContext context, ICardChangeWithTracker card
             return Result.NotFound(nameof(entity));
 
         await _cardChanger.Delete(entity, cancellationToken);
+        _context.Cards.Remove(entity);
 
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

@@ -19,6 +19,7 @@ public class GetGroupListsHandler(AppDbContext context, IMapper mapper)
                                                          CancellationToken cancellationToken)
     {
         List<Core.Entities.GroupList> entities = await _context.GroupLists
+            .OrderBy(entity => entity.Id)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 

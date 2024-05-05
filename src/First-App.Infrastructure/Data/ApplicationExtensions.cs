@@ -10,7 +10,7 @@ public static class ApplicationExtensions
     public static IServiceCollection AddAppDbContext(this IServiceCollection services,
                                                      string connectionString)
     {
-        services.AddScoped<SaveChangesInterceptor, SoftDeleteInterceptor>();
+        services.AddSingleton<SaveChangesInterceptor, SoftDeleteInterceptor>();
 
         services.AddDbContext<AppDbContext>((provider, options) =>
         {

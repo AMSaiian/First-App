@@ -13,7 +13,7 @@ public class Card : BaseEntity,
 
     public bool IsDeleted { get; set; } = false;
 
-    public int GroupId { get; set; }
+    public int? GroupId { get; set; }
 
     public int PriorityId { get; set; }
 

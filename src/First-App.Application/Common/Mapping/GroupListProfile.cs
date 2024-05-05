@@ -13,8 +13,5 @@ public class GroupListProfile : Profile
         CreateMap<CreateGroupListCommand, GroupList>();
 
         CreateMap<GroupList, GroupListDto>();
-
-        CreateMap<GroupList, GroupListWithCardsDto>();
-        CreateMap<Paginated<CardDto>, GroupListWithCardsDto>();
     }
 }

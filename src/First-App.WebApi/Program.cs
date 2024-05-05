@@ -1,5 +1,6 @@
 using First_App.Application;
 using First_App.Infrastructure.Data;
+using First_App.Infrastructure.Data.Seeding;
 using First_App.WebApi;
 using First_App.WebApi.Middlewares;
 using Microsoft.OpenApi.Any;
@@ -34,6 +35,10 @@ builder.Services.AddProblemDetails();
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
+
+// using IServiceScope scope = app.Services.CreateScope();
+// await using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+// await RequiredDataSeeder.PopulateDbContext(dbContext);
 
 app.UseExceptionHandler();
 

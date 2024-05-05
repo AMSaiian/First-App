@@ -25,7 +25,9 @@ public class DeleteGroupListHandler(AppDbContext context,
         if (entity is null)
             return Result.NotFound(nameof(entity));
 
-        entity.Cards.ForEach(c => _cardChanger.Delete(c, cancellationToken));
+        foreach (var card in entity.Cards)
+            await _cardChanger.Delete(card, cancellationToken);
+
         _context.Cards.RemoveRange(entity.Cards);
         _context.GroupLists.Remove(entity);
 

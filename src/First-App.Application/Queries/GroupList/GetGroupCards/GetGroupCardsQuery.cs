@@ -25,6 +25,7 @@ public class GetGroupCardsHandler(AppDbContext context, IMapper mapper)
                                                          CancellationToken cancellationToken)
     {
         var groupListEntity = await _context.GroupLists
+            .OrderBy(entity => entity.Name)
             .AsNoTracking()
             .FirstOrDefaultAsync(groupList => groupList.Id == request.GroupId,
                                  cancellationToken);

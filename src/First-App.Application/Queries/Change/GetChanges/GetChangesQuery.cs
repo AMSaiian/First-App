@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace First_App.Application.Queries.Change.GetChanges;
 
-public record GetChangesCommand(PaginationContext? PaginationContext)
+public record GetChangesQuery(PaginationContext? PaginationContext)
     : IRequest<Result<Paginated<ChangeDto>>>;
 
 public class GetChangesHandler(AppDbContext context, IMapper mapper)
     : PaginatedQueryHandlerBase,
-      IRequestHandler<GetChangesCommand, Result<Paginated<ChangeDto>>>
+      IRequestHandler<GetChangesQuery, Result<Paginated<ChangeDto>>>
 {
     private readonly AppDbContext _context = context;
     private readonly IMapper _mapper = mapper;
 
 
-    public async Task<Result<Paginated<ChangeDto>>> Handle(GetChangesCommand request,
+    public async Task<Result<Paginated<ChangeDto>>> Handle(GetChangesQuery request,
                                                            CancellationToken cancellationToken)
     {
         var changesQuery = _context.Changes
