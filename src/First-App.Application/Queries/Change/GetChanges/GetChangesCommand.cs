@@ -3,40 +3,30 @@ using AutoMapper;
 using First_App.Application.Common.Dtos;
 using First_App.Application.Common.Dtos.Pagination;
 using First_App.Application.Common.HandlerBase;
-using First_App.Core.Entities;
 using First_App.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace First_App.Application.Queries.Change;
+namespace First_App.Application.Queries.Change.GetChanges;
 
-public record GetCardChangesQuery(int CardId, PaginationContext? PaginationContext)
+public record GetChangesCommand(PaginationContext? PaginationContext)
     : IRequest<Result<Paginated<ChangeDto>>>;
 
-public class GetCardChangesHandler(AppDbContext context, IMapper mapper)
+public class GetChangesHandler(AppDbContext context, IMapper mapper)
     : PaginatedQueryHandlerBase,
-      IRequestHandler<GetCardChangesQuery, Result<Paginated<ChangeDto>>>
+      IRequestHandler<GetChangesCommand, Result<Paginated<ChangeDto>>>
 {
     private readonly AppDbContext _context = context;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<Result<Paginated<ChangeDto>>> Handle(GetCardChangesQuery request,
+
+    public async Task<Result<Paginated<ChangeDto>>> Handle(GetChangesCommand request,
                                                            CancellationToken cancellationToken)
     {
-        Card? cardEntity = await _context.Cards.FindAsync(request.CardId, cancellationToken);
-
-        if (cardEntity is null)
-        {
-            return Result<Paginated<ChangeDto>>.NotFound(nameof(Card));
-        }
-
-        var changesQuery = _context
-            .Entry(cardEntity)
-            .Collection(entry => entry.ChangeHistory)
-            .Query()
-            .AsNoTracking()
-            .Include(change => change.Type)
-            .Include(change => change.Parameters);
+        var changesQuery = _context.Changes
+            .Include(c => c.Type)
+            .Include(c => c.Parameters)
+            .AsNoTracking();
 
         var paginatedEntities = await ProcessPagination(changesQuery,
                                                         change => change.Time,

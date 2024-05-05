@@ -1,7 +1,7 @@
 ﻿using First_App.Application.Common.Dtos.Pagination;
 using FluentValidation;
 
-namespace First_App.Application.Queries.Change;
+namespace First_App.Application.Queries.Card.GetCardChanges;
 
 public class GetCardChangesQueryValidator : AbstractValidator<GetCardChangesQuery>
 {

@@ -8,11 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Queries\Card\" />
-      <Folder Include="Queries\GroupList\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Ardalis.Result.AspNetCore" Version="8.0.0" />
       <PackageReference Include="Ardalis.Result.FluentValidation" Version="7.2.0" />
       <PackageReference Include="AutoMapper" Version="13.0.1" />

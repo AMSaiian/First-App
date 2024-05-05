@@ -1,3 +1,4 @@
 ﻿namespace First_App.Application.Common.Dtos;
 
-public record PriorityDto(int Id, string Title);
+public record PriorityDto(int Id = default,
+                          string Title = default!);

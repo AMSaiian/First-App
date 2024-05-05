@@ -6,7 +6,7 @@ using First_App.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace First_App.Application.Queries.Priority;
+namespace First_App.Application.Queries.Priority.GetPriorities;
 
 public record GetPrioritiesQuery : IRequest<Result<List<PriorityDto>>>;
 
