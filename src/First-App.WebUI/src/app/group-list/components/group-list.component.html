@@ -1,5 +1,10 @@
 <h2>{{groupList.name}}</h2>
+<h3>{{groupList.cardsAmount}}</h3>
 
 <ng-container *ngFor="let card of cards">
-  <app-card [card]="card"></app-card>
+  <app-card
+    [card]="card"
+    [priority]="(priorities | filter: { id: card.priorityId })[0]">
+    []
+  </app-card>
 </ng-container>

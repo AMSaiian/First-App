@@ -9,14 +9,19 @@
 </div>
 
 <div class="group-lists-wrapper">
-  <ng-container *ngIf="{ groupLists: GroupLists$ | async, cards: Cards$ | async } as data">
-      <ng-container *ngFor="let groupList of data.groupLists">
-        <app-group-list
-          [groupList]="groupList"
-          [cards]="data.cards! | filter: { groupId: groupList.id }"
-          [ngClass]="'group-list-wrapper'">
-        </app-group-list>
-      </ng-container>
+  <ng-container *ngIf="{
+      groupLists: groupLists$ | async,
+      cards: cards$ | async,
+      priorities: priorities$ | async
+    } as data">
+    <ng-container *ngFor="let groupList of data.groupLists">
+      <app-group-list
+        [groupList]="groupList"
+        [cards]="data.cards! | filter: { groupId: groupList.id }"
+        [priorities]="data.priorities!"
+        [ngClass]="'group-list-wrapper'">
+      </app-group-list>
+    </ng-container>
   </ng-container>
 </div>
 <button (click)="onButtonClick()"></button>

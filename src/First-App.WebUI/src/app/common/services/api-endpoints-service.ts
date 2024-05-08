@@ -13,7 +13,11 @@ export class ApiEndpointsService {
     return [this.baseUrl, this.baseLists].join('/');
   }
 
-  public getGroupListCards(groupListId: number) {
+  public getGroupListCards(groupListId: number): string {
     return [this.baseUrl, this.baseLists, groupListId.toString(), this.baseCards].join('/');
+  }
+
+  public getPriorities(): string {
+    return [this.baseUrl, this.basePriorities].join('/');
   }
 }

@@ -12,6 +12,8 @@ import {ApiEndpointsService} from "./common/services/api-endpoints-service";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {PrioritiesService} from "./priorities/services/priorities-service";
+import {Priority} from "./common/models/priority";
 
 @Component({
   selector: 'app-root',
@@ -22,26 +24,30 @@ import {MatIconModule} from "@angular/material/icon";
     MatGridListModule, NgClass, MatButtonModule,
     MatIconModule
   ],
-  providers: [GroupListService, ApiEndpointsService],
+  providers: [GroupListService, ApiEndpointsService, PrioritiesService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   title = 'First-App.WebUI';
 
-  public Cards$!: Observable<Card[]>;
-  public GroupLists$!: Observable<GroupList[]>;
+  public cards$!: Observable<Card[]>;
+  public groupLists$!: Observable<GroupList[]>;
+  public priorities$!: Observable<Priority[]>
 
-  constructor(private groupListService: GroupListService) {
+  constructor(private groupListService: GroupListService,
+              private prioritiesService: PrioritiesService) {
   }
 
   ngOnInit(): void {
     this.groupListService.getInitGroupListsWithCards();
-    this.Cards$ = this.groupListService.cards$;
-    this.GroupLists$ = this.groupListService.groupLists$;
+    this.prioritiesService.getPriorities();
+    this.cards$ = this.groupListService.cards$;
+    this.groupLists$ = this.groupListService.groupLists$;
+    this.priorities$ = this.prioritiesService.priorities$;
   }
 
   public onButtonClick(): void {
-    this.groupListService.getGroupListCards(1, { pageNum:2, pageSize: 2 })
+    this.groupListService.getGroupListCards(1, { pageNum: 2, pageSize: 2 })
   }
 }

@@ -1,14 +1,28 @@
 :host {
-  margin-top: 2%;
+  margin-top: 4%;
 }
 
-.example-card {
+.card {
   border: 1px solid #ccc;
   box-shadow: none;
 }
 
-.example-card-content {
-  overflow: hidden; /* Ensure the card's content stays within its boundaries */
-  white-space: normal; /* Allow text to wrap within the card */
+.card-due-date, .card-description, .card-priority {
+  margin-top: 5%;
+}
+
+.card-due-date {
+  display: flex;
+  align-items: center;
+}
+
+.card-due-date p {
+  padding-left: 1%;
+}
+
+.card-description {
+  overflow: hidden;
+  white-space: normal;
   text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.5);
 }

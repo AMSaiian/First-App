@@ -1,13 +1,54 @@
-<mat-card class="example-card">
+<mat-card class="card">
   <mat-card-header>
     <mat-card-title>
       {{card.name}}
     </mat-card-title>
   </mat-card-header>
-  <mat-card-content class="example-card-content">
-    {{card.description}}
+  <mat-card-content>
+    <div class="card-due-date">
+      <mat-icon>calendar_today</mat-icon>
+      <p>{{card.dueDate | date}}</p>
+    </div>
+    <div class="card-priority">
+      <mat-chip>{{priority.title}}</mat-chip>
+    </div>
+    <div class="card-description">
+      <p class="muted">Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.
+        Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.
+        Sed ultrices eros sapien, ac facilisis eros dictum nec. In sagittis sed leo in mattis.
+        Integer quis nulla fermentum, commodo leo nec, finibus enim.</p>
+    </div>
   </mat-card-content>
   <mat-card-actions>
+    <mat-select placeholder="Priority" [(ngModel)]="nextListId" (selectionChange)="onChangedList()">
+      <ng-container *ngFor="let anotherList of anotherLists">
+        <mat-option [value]="anotherList.listId">{{anotherList.listName}}</mat-option>
+      </ng-container>
+    </mat-select>
   </mat-card-actions>
   <mat-card-footer>
   </mat-card-footer>
