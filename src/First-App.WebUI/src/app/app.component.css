@@ -1,0 +1,13 @@
+:host {
+  width: 100%;
+}
+
+.group-lists-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  min-height: 50%;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
