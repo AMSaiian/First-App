@@ -10,11 +10,18 @@ import {Card} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, GroupListComponent, FilterPipe, NgForOf, NgIf, HttpClientModule, MatGridListModule, NgClass],
+  imports: [
+    RouterOutlet, AsyncPipe, GroupListComponent,
+    FilterPipe, NgForOf, NgIf, HttpClientModule,
+    MatGridListModule, NgClass, MatButtonModule,
+    MatIconModule
+  ],
   providers: [GroupListService, ApiEndpointsService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

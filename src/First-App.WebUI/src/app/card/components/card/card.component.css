@@ -1,0 +1,14 @@
+:host {
+  margin-top: 2%;
+}
+
+.example-card {
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
+
+.example-card-content {
+  overflow: hidden; /* Ensure the card's content stays within its boundaries */
+  white-space: normal; /* Allow text to wrap within the card */
+  text-overflow: ellipsis;
+}
