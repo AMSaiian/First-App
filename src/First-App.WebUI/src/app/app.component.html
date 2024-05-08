@@ -14,12 +14,14 @@
       cards: cards$ | async,
       priorities: priorities$ | async
     } as data">
-    <ng-container *ngFor="let groupList of data.groupLists">
+    <ng-container *ngFor="let groupList of data.groupLists?.sort(compareGroupLists)">
       <app-group-list
         [groupList]="groupList"
-        [cards]="data.cards! | filter: { groupId: groupList.id }"
+        [cards]="(data.cards! | filter: { groupId: groupList.id }).sort(compareCards)"
         [priorities]="data.priorities!"
-        [ngClass]="'group-list-wrapper'">
+        [anotherLists]="(data.groupLists! | filter: excludeGroupListById(groupList.id)).sort(compareGroupLists)"
+        [ngClass]="'group-list-wrapper'"
+        (cardInListUpdated)="onCardUpdated($event)">
       </app-group-list>
     </ng-container>
   </ng-container>

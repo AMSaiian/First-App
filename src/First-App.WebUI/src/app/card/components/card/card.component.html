@@ -43,13 +43,15 @@
         Integer quis nulla fermentum, commodo leo nec, finibus enim.</p>
     </div>
   </mat-card-content>
-  <mat-card-actions>
-    <mat-select placeholder="Priority" [(ngModel)]="nextListId" (selectionChange)="onChangedList()">
-      <ng-container *ngFor="let anotherList of anotherLists">
-        <mat-option [value]="anotherList.listId">{{anotherList.listName}}</mat-option>
-      </ng-container>
-    </mat-select>
-  </mat-card-actions>
+  <div class="move-to-wrapper">
+    <mat-card-actions>
+      <mat-select placeholder="Move to" [(ngModel)]="nextListId" (selectionChange)="onChangedList()">
+        <ng-container *ngFor="let anotherList of anotherLists">
+          <mat-option [value]="anotherList.id">{{anotherList.name}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-card-actions>
+  </div>
   <mat-card-footer>
   </mat-card-footer>
 </mat-card>

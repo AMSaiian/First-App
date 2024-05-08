@@ -51,7 +51,7 @@ public class CardsController(IMediator mediator) : ControllerBase
         return result;
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<Result> Delete(int id,
                                      CancellationToken cancellationToken)
     {

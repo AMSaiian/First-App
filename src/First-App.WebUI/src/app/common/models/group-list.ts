@@ -1,6 +1,8 @@
-﻿export interface GroupList {
-  id: number,
-  name: string,
+﻿import { GroupListInfo } from "./group-list-info";
+
+export interface GroupList extends GroupListInfo {
   cardsAmount: number,
-  hasNextCards: boolean
+  hasNextCards: boolean,
+  currentPage: number
 }
+

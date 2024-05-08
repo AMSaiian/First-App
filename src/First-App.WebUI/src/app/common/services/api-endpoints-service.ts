@@ -20,4 +20,8 @@ export class ApiEndpointsService {
   public getPriorities(): string {
     return [this.baseUrl, this.basePriorities].join('/');
   }
+
+  public updateCard(cardId: number) {
+    return [this.baseUrl, this.baseCards, cardId.toString()].join('/');
+  }
 }

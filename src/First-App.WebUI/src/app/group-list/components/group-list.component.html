@@ -4,7 +4,8 @@
 <ng-container *ngFor="let card of cards">
   <app-card
     [card]="card"
-    [priority]="(priorities | filter: { id: card.priorityId })[0]">
-    []
+    [priority]="(priorities | filter: { id: card.priorityId })[0]"
+    [anotherLists]="anotherLists"
+    (cardUpdated)="onCardInListChanged($event)">
   </app-card>
 </ng-container>

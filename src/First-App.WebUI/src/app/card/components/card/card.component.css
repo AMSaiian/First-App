@@ -24,5 +24,9 @@
   overflow: hidden;
   white-space: normal;
   text-overflow: ellipsis;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.move-to-wrapper {
+  padding: 0 3% 0 3%;
 }

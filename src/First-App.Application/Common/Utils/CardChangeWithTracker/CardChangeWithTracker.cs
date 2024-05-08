@@ -92,6 +92,8 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
             if (!intermediateResult.IsSuccess)
                 conflictErrorList.AddRange(intermediateResult.Errors);
+
+            isChanged = true;
         }
 
         if (updateEntity.GroupId is not null
@@ -102,6 +104,8 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
             if (!intermediateResult.IsSuccess)
                 conflictErrorList.AddRange(intermediateResult.Errors);
+
+            isChanged = true;
         }
 
         if (conflictErrorList.Count > 0)
@@ -290,7 +294,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
             new()
             {
                 Name = ChangeCardParametersNames.PreviousValue,
-                Value = entity.Priority!.Title
+                Value = entity.Group!.Name
             },
             new()
             {

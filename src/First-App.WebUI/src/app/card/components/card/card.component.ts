@@ -7,6 +7,7 @@ import {DatePipe, NgForOf} from "@angular/common";
 import {MatChip} from "@angular/material/chips";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
+import {GroupListInfo} from "../../../common/models/group-list-info";
 
 @Component({
   selector: 'app-card',
@@ -18,12 +19,12 @@ import {FormsModule} from "@angular/forms";
 export class CardComponent {
   @Input() card!: Card;
   @Input() priority!: Priority;
-  @Input() anotherLists!: { listId: number, listName: string }[];
-  @Output() changedList = new EventEmitter<[cardId: number, newPriorityId: number]>
+  @Input() anotherLists!: GroupListInfo[];
+  @Output() cardUpdated = new EventEmitter<Partial<Card>>;
 
   public nextListId!: number;
 
   public onChangedList() {
-    this.changedList.emit([this.card.id, this.nextListId]);
+    this.cardUpdated.emit({ id: this.card.id, groupId: this.nextListId });
   }
 }

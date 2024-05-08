@@ -6,7 +6,7 @@ import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
 import {Observable} from "rxjs";
-import {Card} from "./common/models/card";
+import {Card, compareCards} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
 import {MatGridListModule} from "@angular/material/grid-list";
@@ -14,6 +14,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {PrioritiesService} from "./priorities/services/priorities-service";
 import {Priority} from "./common/models/priority";
+import {compareGroupLists} from "./common/models/group-list-info";
 
 @Component({
   selector: 'app-root',
@@ -47,7 +48,18 @@ export class AppComponent implements OnInit {
     this.priorities$ = this.prioritiesService.priorities$;
   }
 
+  public onCardUpdated($event: Partial<Card>): void {
+    this.groupListService.updateCard($event);
+  }
+
   public onButtonClick(): void {
     this.groupListService.getGroupListCards(1, { pageNum: 2, pageSize: 2 })
   }
+
+  public excludeGroupListById(excludeId: number) {
+    return (card: Card) => card.id !== excludeId;
+  }
+
+  protected readonly compareGroupLists = compareGroupLists;
+  protected readonly compareCards = compareCards;
 }

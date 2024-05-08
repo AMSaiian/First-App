@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { NgForOf, SlicePipe } from "@angular/common";
 import { CardComponent } from "../../card/components/card/card.component";
-import { Card } from "../../common/models/card";
+import {Card, compareCards} from "../../common/models/card";
 import { GroupList } from '../../common/models/group-list';
 import { Priority } from "../../common/models/priority";
 import { FilterPipe } from "../../common/pipes/filter-pipe";
+import {GroupListInfo} from "../../common/models/group-list-info";
 
 @Component({
   selector: 'app-group-list',
@@ -21,5 +22,11 @@ import { FilterPipe } from "../../common/pipes/filter-pipe";
 export class GroupListComponent {
   @Input() cards!: Card[];
   @Input() groupList!: GroupList;
+  @Input() anotherLists!: GroupListInfo[]
   @Input() priorities!: Priority[];
+  @Output() cardInListUpdated = new EventEmitter<Partial<Card>>;
+
+  public onCardInListChanged($event: Partial<Card>) {
+    this.cardInListUpdated.emit($event);
+  }
 }
