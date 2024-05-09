@@ -25,6 +25,10 @@ export class ApiEndpointsService {
     return [this.baseUrl, this.baseCards, cardId.toString()].join('/');
   }
 
+  public createGroupList() {
+    return [this.baseUrl, this.baseLists].join('/');
+  }
+
   public updateGroupList(groupListId: number) {
     return [this.baseUrl, this.baseLists, groupListId.toString()].join('/');
   }

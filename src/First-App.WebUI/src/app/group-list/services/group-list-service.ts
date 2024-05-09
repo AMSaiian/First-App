@@ -100,6 +100,22 @@ export class GroupListService {
       });
   }
 
+  public createList(newList: Partial<GroupList>) {
+    this.http.post<number>(this.apiEndpoints.createGroupList(), newList)
+      .pipe(map((data): GroupList => ({
+          id: data,
+          name: newList.name!,
+          hasNextCards: false,
+          currentPage: 1,
+          cardsAmount: 0
+        }))
+      )
+      .subscribe(data => {
+        const previousState = this.groupListsSubject.value;
+        this.groupListsSubject.next([...previousState, data]);
+      });
+  }
+
   public updateList(changes: Partial<GroupList>) {
     this.http.put(this.apiEndpoints.updateGroupList(changes.id!), changes)
       .subscribe(() => {

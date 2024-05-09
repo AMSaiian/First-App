@@ -1,0 +1,19 @@
+:host,
+.edit-group-list-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.group-name-field {
+  margin-bottom: 1%;
+}
+
+.edit-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-group-button {
+  width: 48%;
+}
