@@ -31,36 +31,19 @@
   </ng-container>
 
   <ng-template #edit>
-    <form
-      [formGroup]="editForm"
-      (ngSubmit)="onSaveEditGroupList()"
-      class="edit-group-list-form">
-      <mat-form-field class="group-name-field">
-        <input matInput type="text" placeholder="List name" formControlName="groupName" />
-        <mat-error *ngIf="editForm.get('groupName')?.errors?.['required']">Name is required</mat-error>
-        <mat-error *ngIf="editForm.get('groupName')?.errors?.['maxlength']">Name must be less than 100 characters</mat-error>
-        <mat-error *ngIf="editForm.get('groupName')?.errors?.['sameAsPrevious']">Name must be different from the initial one</mat-error>
-      </mat-form-field>
-      <div class="edit-buttons-wrapper">
-        <button mat-flat-button color="primary"
-                class="edit-group-button"
-                [color]="'primary'"
-                [type]="'submit'"
-                [disabled]="!editForm.valid">
-          Save
-        </button>
-        <button mat-flat-button
-                [color]="'warn'"
-                class="edit-group-button"
-                [type]="'button'"
-                (click)="onCancelEdit()">
-          Cancel
-        </button>
-      </div>
-    </form>
+    <app-group-list-form
+      class="edit-group-list-form"
+      [form]="editForm"
+      (saved)="onSaveEditGroupList()"
+      (cancelled)="onCancelEdit()"
+    />
   </ng-template>
 </div>
 
+<button class="new-card-button" mat-raised-button>
+  <mat-icon>add</mat-icon>
+  Add new card
+</button>
 
 <ng-container *ngFor="let card of cards">
   <app-card

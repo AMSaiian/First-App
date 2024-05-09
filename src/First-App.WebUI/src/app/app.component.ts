@@ -17,6 +17,10 @@ import {Priority} from "./common/models/priority";
 import {compareGroupLists} from "./common/models/group-list-info";
 import {PaginationSizeService} from "./common/services/pagination-size-service";
 import {NextCardsForGroupList} from "./common/events/next-cards-for-group-list";
+import {GroupListFormComponent} from "./group-list/components/group-list-form/group-list-form.component";
+import {MatMenu, MatMenuItem} from "@angular/material/menu";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {sameValueValidator} from "./common/validators/same-value-validator";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +29,7 @@ import {NextCardsForGroupList} from "./common/events/next-cards-for-group-list";
     RouterOutlet, AsyncPipe, GroupListComponent,
     FilterPipe, NgForOf, NgIf, HttpClientModule,
     MatGridListModule, NgClass, MatButtonModule,
-    MatIconModule
+    MatIconModule, GroupListFormComponent, MatMenu, MatMenuItem
   ],
   providers: [
     GroupListService,
@@ -45,7 +49,8 @@ export class AppComponent implements OnInit {
 
   constructor(private groupListService: GroupListService,
               private prioritiesService: PrioritiesService,
-              private paginationService: PaginationSizeService) {
+              private paginationService: PaginationSizeService,
+              private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -54,6 +59,15 @@ export class AppComponent implements OnInit {
     this.cards$ = this.groupListService.cards$;
     this.groupLists$ = this.groupListService.groupLists$;
     this.priorities$ = this.prioritiesService.priorities$;
+
+    this.createListForm = this.formBuilder.group({
+      groupName: [
+        '', [
+          Validators.required,
+          Validators.maxLength(100)
+        ]
+      ]
+    });
   }
 
   public onCardUpdated($event: Partial<Card>): void {
@@ -75,10 +89,27 @@ export class AppComponent implements OnInit {
     });
   }
 
+  public onCreateListRequested() {
+    this.createListRequested = true;
+  }
+
+  public onCreateList() {
+    this.groupListService.createList({ name: this.createListForm.value.groupName })
+    this.createListRequested = false;
+  }
+
+  public onCancelCreateList() {
+    this.createListForm.reset();
+    this.createListRequested = false;
+  }
+
   protected excludeGroupListById(excludeId: number) {
     return (card: Card) => card.id !== excludeId;
   }
 
   protected readonly compareGroupLists = compareGroupLists;
   protected readonly compareCards = compareCards;
+
+  protected createListRequested = false;
+  protected createListForm!: FormGroup;
 }

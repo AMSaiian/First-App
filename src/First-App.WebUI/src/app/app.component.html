@@ -9,6 +9,27 @@
 </div>
 
 <div class="group-lists-wrapper">
+  <div class="new-list-wrapper">
+    <div class="new-group-list-header">
+      <ng-container *ngIf="!createListRequested; else create">
+        <button mat-button
+                (click)="onCreateListRequested()"
+                class="new-group-list-button">
+          <h2>Add new group list</h2>
+          <mat-icon>add</mat-icon>
+        </button>
+      </ng-container>
+
+      <ng-template #create>
+        <app-group-list-form
+          [form]="createListForm"
+          (saved)="onCreateList()"
+          (cancelled)="onCancelCreateList()"
+        />
+      </ng-template>
+    </div>
+  </div>
+
   <ng-container *ngIf="{
       groupLists: groupLists$ | async,
       cards: cards$ | async,

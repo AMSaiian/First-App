@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   margin-right: 1%;
-  max-width: 20%;
+  width: 20%;
   flex-shrink: 0;
   padding-bottom: 1%;
 }
@@ -10,7 +10,9 @@
 .group-list-header {
   display: flex;
   justify-content: space-between;
-  padding-left: 5%;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
 }
 
 .group-list-name,
@@ -19,29 +21,14 @@
   align-items: center;
 }
 
+.group-list-name {
+  padding-left: 5%;
+}
+
 .group-list-cards-amount {
   margin-right: 10%
 }
 
 .next-cards-button {
   margin-top: 4%;
-}
-
-.edit-group-list-form {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.group-name-field {
-  margin-bottom: 1%;
-}
-
-.edit-buttons-wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-
-.edit-group-button {
-  width: 48%;
 }
