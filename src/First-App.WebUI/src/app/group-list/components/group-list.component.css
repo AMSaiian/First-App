@@ -2,7 +2,46 @@
   display: flex;
   flex-direction: column;
   margin-right: 1%;
-  width: 20%;
+  max-width: 20%;
   flex-shrink: 0;
   padding-bottom: 1%;
+}
+
+.group-list-header {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5%;
+}
+
+.group-list-name,
+.group-list-menu-and-amount-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.group-list-cards-amount {
+  margin-right: 10%
+}
+
+.next-cards-button {
+  margin-top: 4%;
+}
+
+.edit-group-list-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.group-name-field {
+  margin-bottom: 1%;
+}
+
+.edit-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-group-button {
+  width: 48%;
 }

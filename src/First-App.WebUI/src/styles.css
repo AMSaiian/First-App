@@ -20,3 +20,7 @@ body {
   "Helvetica Neue",
   sans-serif;
 }
+
+.unsafe {
+  color: red;
+}

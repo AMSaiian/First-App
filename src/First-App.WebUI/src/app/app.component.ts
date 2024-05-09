@@ -15,6 +15,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {PrioritiesService} from "./priorities/services/priorities-service";
 import {Priority} from "./common/models/priority";
 import {compareGroupLists} from "./common/models/group-list-info";
+import {PaginationSizeService} from "./common/services/pagination-size-service";
+import {NextCardsForGroupList} from "./common/events/next-cards-for-group-list";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +27,12 @@ import {compareGroupLists} from "./common/models/group-list-info";
     MatGridListModule, NgClass, MatButtonModule,
     MatIconModule
   ],
-  providers: [GroupListService, ApiEndpointsService, PrioritiesService],
+  providers: [
+    GroupListService,
+    ApiEndpointsService,
+    PrioritiesService,
+    PaginationSizeService
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -37,11 +44,12 @@ export class AppComponent implements OnInit {
   public priorities$!: Observable<Priority[]>
 
   constructor(private groupListService: GroupListService,
-              private prioritiesService: PrioritiesService) {
+              private prioritiesService: PrioritiesService,
+              private paginationService: PaginationSizeService) {
   }
 
   ngOnInit(): void {
-    this.groupListService.getInitGroupListsWithCards();
+    this.groupListService.getInitGroupListsWithCards(this.paginationService.getCardsInGroupListAmount());
     this.prioritiesService.getPriorities();
     this.cards$ = this.groupListService.cards$;
     this.groupLists$ = this.groupListService.groupLists$;
@@ -52,11 +60,22 @@ export class AppComponent implements OnInit {
     this.groupListService.updateCard($event);
   }
 
-  public onButtonClick(): void {
-    this.groupListService.getGroupListCards(1, { pageNum: 2, pageSize: 2 })
+  public onGroupListUpdated($event: Partial<GroupList>) {
+    this.groupListService.updateList($event);
   }
 
-  public excludeGroupListById(excludeId: number) {
+  public onGroupListDeleted($event: number) {
+    this.groupListService.deleteList($event);
+  }
+
+  public onNextCardsForGroupListRequested($event: NextCardsForGroupList) {
+    this.groupListService.getGroupListCards($event.groupListId, {
+      pageNum: $event.nextPage,
+      pageSize: this.paginationService.getCardsInGroupListAmount()
+    });
+  }
+
+  protected excludeGroupListById(excludeId: number) {
     return (card: Card) => card.id !== excludeId;
   }
 

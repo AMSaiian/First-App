@@ -19,7 +19,7 @@ export class GroupListService {
   public groupLists$: Observable<GroupList[]> = this.groupListsSubject.asObservable();
   public cards$: Observable<Card[]> = this.cardsSubject.asObservable();
 
-  public getInitGroupListsWithCards(pageSize: number = 2) {
+  public getInitGroupListsWithCards(pageSize: number) {
     this.http.get<GroupListWithCardsDto[]>(this.apiEndpoints.getGroupListsWithCards(), {
       params: {
         pageNum: 1,
@@ -94,9 +94,34 @@ export class GroupListService {
 
         this.cardsSubject.next([...cardsWithoutUpdated, updatedCard]);
 
-        if (changes.id !== null) {
+        if (changes.groupId !== null) {
           this.handleGroupListCountChanges(cardToUpdate.groupId, updatedCard.groupId);
         }
+      });
+  }
+
+  public updateList(changes: Partial<GroupList>) {
+    this.http.put(this.apiEndpoints.updateGroupList(changes.id!), changes)
+      .subscribe(() => {
+        const previousLists = this.groupListsSubject.value;
+        const listToUpdate = previousLists.find(list => list.id === changes.id)!;
+        const listsWithoutUpdated = previousLists.filter(list => list.id !== changes.id);
+        const updatedList = { ...listToUpdate, ...changes };
+
+        this.groupListsSubject.next([...listsWithoutUpdated, updatedList]);
+      });
+  }
+
+  public deleteList(listId: number) {
+    this.http.delete(this.apiEndpoints.deleteGroupList(listId))
+      .subscribe(() => {
+        const listsWithoutDeleted = this.groupListsSubject.value
+          .filter(list => list.id !== listId);
+        this.groupListsSubject.next(listsWithoutDeleted);
+
+        const cardsWithoutDeletedWithList = this.cardsSubject.value
+          .filter(card => card.groupId !== listId);
+        this.cardsSubject.next(cardsWithoutDeletedWithList);
       });
   }
 

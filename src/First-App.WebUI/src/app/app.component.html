@@ -3,7 +3,7 @@
     My Task Board
   </h1>
   <button mat-raised-button>
-    <mat-icon>refresh</mat-icon>
+    <mat-icon>schedule</mat-icon>
     History
   </button>
 </div>
@@ -21,9 +21,11 @@
         [priorities]="data.priorities!"
         [anotherLists]="(data.groupLists! | filter: excludeGroupListById(groupList.id)).sort(compareGroupLists)"
         [ngClass]="'group-list-wrapper'"
-        (cardInListUpdated)="onCardUpdated($event)">
+        (cardInListUpdated)="onCardUpdated($event)"
+        (newCardsRequested)="onNextCardsForGroupListRequested($event)"
+        (groupListDeleted)="onGroupListDeleted($event)"
+        (groupListUpdated)="onGroupListUpdated($event)">
       </app-group-list>
     </ng-container>
   </ng-container>
 </div>
-<button (click)="onButtonClick()"></button>
