@@ -84,6 +84,26 @@ export class GroupListService {
       })
   }
 
+  public createCard(newCard: Partial<Card>) {
+    this.http.post<number>(this.apiEndpoints.createCard(), {
+      ...newCard,
+      dueDate: newCard.dueDate?.toISOString().split('T')[0]
+    })
+      .pipe(map((data) : Card => ({
+        id: data,
+        name: newCard.name!,
+        description: newCard.description!,
+        dueDate: newCard.dueDate!,
+        priorityId: newCard.priorityId!,
+        groupId: newCard.groupId!
+      })))
+      .subscribe(data => {
+        const previousStateCards = this.cardsSubject.value;
+        this.cardsSubject.next([...previousStateCards, data]);
+        this.handleGroupListCountChange(newCard.groupId!, true);
+      })
+  }
+
   public updateCard(changes: Partial<Card>) {
     this.http.put(this.apiEndpoints.updateCard(changes.id!), changes)
       .subscribe(() => {
@@ -95,7 +115,7 @@ export class GroupListService {
         this.cardsSubject.next([...cardsWithoutUpdated, updatedCard]);
 
         if (changes.groupId !== null) {
-          this.handleGroupListCountChanges(cardToUpdate.groupId, updatedCard.groupId);
+          this.handleGroupListSwitch(cardToUpdate.groupId, updatedCard.groupId);
         }
       });
   }
@@ -141,7 +161,7 @@ export class GroupListService {
       });
   }
 
-  private handleGroupListCountChanges(fromListId: number, toListId: number) {
+  private handleGroupListSwitch(fromListId: number, toListId: number) {
     const oldState = this.groupListsSubject.value
     let previousList = oldState.find(list => list.id === fromListId)!;
     let newList = oldState.find(list => list.id === toListId)!;
@@ -153,6 +173,23 @@ export class GroupListService {
       ...oldState
         .filter(list => (list.id !== fromListId && list.id !== toListId)),
       previousList, newList
+    ]);
+  }
+
+  private handleGroupListCountChange(listId: number, increment: boolean) {
+    const oldState = this.groupListsSubject.value
+    let previousList = oldState.find(list => list.id === listId)!;
+
+    previousList = { ...previousList,
+      cardsAmount: increment
+        ? previousList.cardsAmount + 1
+        : previousList.cardsAmount - 1
+    };
+
+    this.groupListsSubject.next([
+      ...oldState
+        .filter(list => list.id !== listId),
+      previousList
     ]);
   }
 }

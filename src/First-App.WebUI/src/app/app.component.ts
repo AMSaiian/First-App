@@ -5,7 +5,7 @@ import {GroupListComponent} from "./group-list/components/group-list.component";
 import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
-import {Observable} from "rxjs";
+import {mergeMap, Observable, switchMap} from "rxjs";
 import {Card, compareCards} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
@@ -20,7 +20,10 @@ import {NextCardsForGroupList} from "./common/events/next-cards-for-group-list";
 import {GroupListFormComponent} from "./group-list/components/group-list-form/group-list-form.component";
 import {MatMenu, MatMenuItem} from "@angular/material/menu";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {sameValueValidator} from "./common/validators/same-value-validator";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateCardModalComponent} from "./card/components/create-card-modal/create-card-modal.component";
+import {DateAdapter, MatNativeDateModule} from "@angular/material/core";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-root',
@@ -29,13 +32,13 @@ import {sameValueValidator} from "./common/validators/same-value-validator";
     RouterOutlet, AsyncPipe, GroupListComponent,
     FilterPipe, NgForOf, NgIf, HttpClientModule,
     MatGridListModule, NgClass, MatButtonModule,
-    MatIconModule, GroupListFormComponent, MatMenu, MatMenuItem
+    MatIconModule, GroupListFormComponent, MatMenu, MatMenuItem,
   ],
   providers: [
     GroupListService,
     ApiEndpointsService,
     PrioritiesService,
-    PaginationSizeService
+    PaginationSizeService,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -50,7 +53,8 @@ export class AppComponent implements OnInit {
   constructor(private groupListService: GroupListService,
               private prioritiesService: PrioritiesService,
               private paginationService: PaginationSizeService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -68,6 +72,54 @@ export class AppComponent implements OnInit {
         ]
       ]
     });
+  }
+
+  public onCardCreateRequested($event: number) {
+    const form = this.formBuilder.group({
+      cardName: [
+        '', [
+          Validators.required,
+          Validators.maxLength(300)
+        ]
+      ],
+      groupId: [
+        $event, [
+          Validators.required
+        ]
+      ],
+      priorityId: [
+        1, [
+          Validators.required
+        ]
+      ],
+      description: [
+        '', [
+          Validators.maxLength(2000)
+        ]
+      ],
+      dueDate: [
+        '', [
+          Validators.required
+        ]
+      ]
+    });
+
+    const dialogRef = this.dialog.open(CreateCardModalComponent, {
+      height: '600px',
+      width: '600px',
+      data: {
+        form: form,
+        priorities$: this.priorities$,
+        groupLists$: this.groupLists$,
+      }
+    })
+      .afterClosed()
+      .subscribe(data => {
+        if (data !== undefined) {
+          console.log("modal closed")
+          this.groupListService.createCard(data);
+        }
+      });
   }
 
   public onCardUpdated($event: Partial<Card>): void {

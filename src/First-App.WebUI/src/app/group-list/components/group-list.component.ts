@@ -43,6 +43,7 @@ export class GroupListComponent implements OnInit {
   @Output() newCardsRequested = new EventEmitter<NextCardsForGroupList>;
   @Output() groupListUpdated = new EventEmitter<Partial<GroupList>>;
   @Output() groupListDeleted = new EventEmitter<number>;
+  @Output() createCardRequested = new EventEmitter<number>;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -61,6 +62,10 @@ export class GroupListComponent implements OnInit {
 
   protected editForm!: FormGroup;
   protected editRequested = false;
+
+  protected onCreateCardRequested() {
+    this.createCardRequested.emit(this.groupList.id);
+  }
 
   protected onCardInListChanged($event: Partial<Card>) {
     this.cardInListUpdated.emit($event);

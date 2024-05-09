@@ -1,0 +1,42 @@
+.card-form-input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-form-label {
+  display: flex;
+  padding-top: 3%;
+  justify-content: center;
+  color: black;
+}
+
+.card-form-input {
+  width: 250px;
+}
+
+.card-form-icon {
+  margin-right: 10px;
+}
+
+.card-form-description-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-form-description-label {
+  display: flex;
+  justify-content: flex-start;
+  color: black;
+  padding: 0 0 2% 1%;
+}
+
+.form-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4%;
+}
+
+.card-form-button {
+  width: 48%;
+}

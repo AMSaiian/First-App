@@ -42,6 +42,7 @@
         [priorities]="data.priorities!"
         [anotherLists]="(data.groupLists! | filter: excludeGroupListById(groupList.id)).sort(compareGroupLists)"
         [ngClass]="'group-list-wrapper'"
+        (createCardRequested)="onCardCreateRequested($event)"
         (cardInListUpdated)="onCardUpdated($event)"
         (newCardsRequested)="onNextCardsForGroupListRequested($event)"
         (groupListDeleted)="onGroupListDeleted($event)"

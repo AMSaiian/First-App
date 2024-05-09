@@ -21,6 +21,10 @@ export class ApiEndpointsService {
     return [this.baseUrl, this.basePriorities].join('/');
   }
 
+  public createCard() {
+    return [this.baseUrl, this.baseCards].join('/');
+  }
+
   public updateCard(cardId: number) {
     return [this.baseUrl, this.baseCards, cardId.toString()].join('/');
   }

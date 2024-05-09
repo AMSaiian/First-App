@@ -31,7 +31,6 @@ export class GroupListFormComponent {
   }
 
   protected onCancelEdit() {
-    this.form.reset();
     this.cancelled.emit();
   }
 }

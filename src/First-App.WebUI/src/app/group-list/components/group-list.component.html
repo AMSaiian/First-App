@@ -40,7 +40,8 @@
   </ng-template>
 </div>
 
-<button class="new-card-button" mat-raised-button>
+<button class="new-card-button" mat-raised-button
+        (click)="onCreateCardRequested()">
   <mat-icon>add</mat-icon>
   Add new card
 </button>

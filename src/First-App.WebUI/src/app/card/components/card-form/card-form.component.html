@@ -1,0 +1,89 @@
+<form [formGroup]="form"
+      (ngSubmit)="onSaved()">
+  <div class="card-form-input-wrapper">
+    <mat-label class="card-form-label">
+      <mat-icon class="card-form-icon">abc</mat-icon>
+      Card name
+    </mat-label>
+    <mat-form-field class="card-form-input">
+      <input matInput type="text" placeholder="Card name" formControlName="cardName" />
+      <mat-error *ngIf="form.get('cardName')?.errors?.['required']">Name is required</mat-error>
+      <mat-error *ngIf="form.get('cardName')?.errors?.['maxlength']">Name must be less than 300 characters</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="card-form-input-wrapper">
+    <mat-label class="card-form-label">
+      <mat-icon class="card-form-icon">list</mat-icon>
+      Select list
+    </mat-label>
+    <mat-form-field class="card-form-input">
+      <mat-select placeholder="Select list" formControlName="groupId">
+        <mat-option [value]="groupList.id" *ngFor="let groupList of groupLists">
+          {{groupList.name}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('groupId')?.errors?.['required']">Group list is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="card-form-input-wrapper">
+    <mat-label class="card-form-label">
+      <mat-icon class="card-form-icon">sell</mat-icon>
+      Priority
+    </mat-label>
+    <mat-form-field class="card-form-input">
+      <mat-select placeholder="Select priority" formControlName="priorityId" >
+        <mat-option [value]="priority.id" *ngFor="let priority of priorities">
+          {{priority.title}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('priorityId')?.errors?.['required']">Priority is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="card-form-input-wrapper">
+    <mat-label class="card-form-label">
+      <mat-icon class="card-form-icon">calendar_today</mat-icon>
+      Due date
+    </mat-label>
+    <mat-form-field class="card-form-input">
+      <input matInput [matDatepicker]="picker"
+             readonly
+             formControlName="dueDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.get('dueDate')?.errors?.['required']">Due date is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="card-form-description-wrapper">
+    <h2 class="card-form-description-label">
+      Description
+    </h2>
+    <mat-form-field class="card-form-description">
+      <textarea matInput
+                placeholder="Provide description"
+                formControlName="description">
+      </textarea>
+      <mat-error *ngIf="form.get('description')?.errors?.['maxlength']">Description must be less than 2000 characters</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-buttons-wrapper">
+    <button mat-flat-button color="primary"
+            class="card-form-button"
+            [color]="'primary'"
+            [type]="'submit'"
+            [disabled]="!form.valid">
+      Save
+    </button>
+    <button mat-flat-button
+            [color]="'warn'"
+            class="card-form-button"
+            [type]="'button'"
+            (click)="onCancelEdit()">
+      Cancel
+    </button>
+  </div>
+</form>
