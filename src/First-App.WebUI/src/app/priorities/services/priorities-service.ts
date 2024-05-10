@@ -1,5 +1,5 @@
 ﻿import {Injectable} from "@angular/core";
-import {BehaviorSubject, map, Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Priority} from "../../common/models/priority";
 import {HttpClient} from "@angular/common/http";
 import {ApiEndpointsService} from "../../common/services/api-endpoints-service";

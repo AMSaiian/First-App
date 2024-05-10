@@ -20,7 +20,6 @@ public static class RequiredDataSeeder
         new() { Name = ChangeCardConstants.UpdateDescription },
         new() { Name = ChangeCardConstants.UpdateGroup },
         new() { Name = ChangeCardConstants.UpdatePriority },
-        new() { Name = ChangeCardConstants.UpdateTitle },
         new() { Name = ChangeCardConstants.UpdateDueDate }
     ];
 

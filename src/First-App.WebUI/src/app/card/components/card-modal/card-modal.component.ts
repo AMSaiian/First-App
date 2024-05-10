@@ -17,7 +17,7 @@ import {AsyncPipe} from "@angular/common";
 import {Card} from "../../../common/models/card";
 
 @Component({
-  selector: 'app-create-card-modal',
+  selector: 'app-card-modal',
   standalone: true,
   imports: [
     CardFormComponent,
@@ -29,22 +29,25 @@ import {Card} from "../../../common/models/card";
     MatDialogContent,
     MatDialogActions
   ],
-  templateUrl: './create-card-modal.component.html',
-  styleUrl: './create-card-modal.component.css'
+  templateUrl: './card-modal.component.html',
+  styleUrl: './card-modal.component.css'
 })
-export class CreateCardModalComponent {
-  protected form!: FormGroup;
-  protected priorities$!: Observable<Priority[]>;
-  protected groupLists$!: Observable<GroupListInfo[]>;
+export class CardModalComponent {
+  protected title: string;
+  protected form: FormGroup;
+  protected priorities$: Observable<Priority[]>;
+  protected groupLists$: Observable<GroupListInfo[]>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: {
+      title: string,
       form: FormGroup,
       priorities$: Observable<Priority[]>,
       groupLists$: Observable<GroupListInfo[]>
     },
-    protected modalRef: MatDialogRef<CreateCardModalComponent>
+    protected modalRef: MatDialogRef<CardModalComponent>
   ) {
+    this.title = data.title;
     this.form = data.form;
     this.groupLists$ = data.groupLists$;
     this.priorities$ = data.priorities$;

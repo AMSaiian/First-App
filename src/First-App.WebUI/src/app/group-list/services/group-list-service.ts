@@ -10,7 +10,8 @@ import { ApiEndpointsService } from "../../common/services/api-endpoints-service
 
 @Injectable({ providedIn: "root" })
 export class GroupListService {
-  constructor(private http: HttpClient, private apiEndpoints: ApiEndpointsService) {
+  constructor(private http: HttpClient,
+              private apiEndpoints: ApiEndpointsService) {
   }
 
   private groupListsSubject: BehaviorSubject<GroupList[]> = new BehaviorSubject<GroupList[]>([]);

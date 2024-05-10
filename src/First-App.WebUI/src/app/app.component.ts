@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {RouterOutlet} from "@angular/router";
 import {AsyncPipe, NgClass, NgForOf, NgIf} from "@angular/common";
-import {GroupListComponent} from "./group-list/components/group-list.component";
+import {GroupListComponent} from "./group-list/components/group-list/group-list.component";
 import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
@@ -21,7 +21,9 @@ import {GroupListFormComponent} from "./group-list/components/group-list-form/gr
 import {MatMenu, MatMenuItem} from "@angular/material/menu";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {CreateCardModalComponent} from "./card/components/create-card-modal/create-card-modal.component";
+import {ChangesService} from "./changes/services/changes-service";
+import {HistoryComponent} from "./changes/components/history/history.component";
+import {CardModalComponent} from "./card/components/card-modal/card-modal.component";
 
 @Component({
   selector: 'app-root',
@@ -37,6 +39,7 @@ import {CreateCardModalComponent} from "./card/components/create-card-modal/crea
     ApiEndpointsService,
     PrioritiesService,
     PaginationSizeService,
+    ChangesService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -72,13 +75,22 @@ export class AppComponent implements OnInit {
     });
   }
 
+  public onViewHistoryRequested() {
+    const dialogRef = this.dialog.open(HistoryComponent, {
+      height: '100vh',
+      width: '400px',
+      position: { right: '0px' }
+    })
+  }
+
   public onCardCreateRequested($event: number) {
     const form = this.createCardForm({ groupId: $event });
 
-    const dialogRef = this.dialog.open(CreateCardModalComponent, {
+    const dialogRef = this.dialog.open(CardModalComponent, {
       height: '600px',
       width: '600px',
       data: {
+        title: "Create card",
         form: form,
         priorities$: this.priorities$,
         groupLists$: this.groupLists$,
@@ -99,10 +111,11 @@ export class AppComponent implements OnInit {
           const cardToUpdate = data.find(card => card.id === $event)!;
           const form = this.createCardForm(cardToUpdate);
 
-          return this.dialog.open(CreateCardModalComponent, {
+          return this.dialog.open(CardModalComponent, {
             height: '600px',
             width: '600px',
             data: {
+              title: "Edit card",
               form: form,
               priorities$: this.priorities$,
               groupLists$: this.groupLists$,

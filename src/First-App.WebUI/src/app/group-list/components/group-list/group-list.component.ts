@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AsyncPipe, NgClass, NgForOf, NgIf, SlicePipe } from "@angular/common";
-import { CardComponent } from "../../card/components/card/card.component";
-import { Card } from "../../common/models/card";
-import { GroupList } from '../../common/models/group-list';
-import { Priority } from "../../common/models/priority";
-import { FilterPipe } from "../../common/pipes/filter-pipe";
-import { GroupListInfo } from "../../common/models/group-list-info";
-import { NextCardsForGroupList } from "../../common/events/next-cards-for-group-list";
+import { CardComponent } from "../../../card/components/card/card.component";
+import { Card } from "../../../common/models/card";
+import { GroupList } from '../../../common/models/group-list';
+import { Priority } from "../../../common/models/priority";
+import { FilterPipe } from "../../../common/pipes/filter-pipe";
+import { GroupListInfo } from "../../../common/models/group-list-info";
+import { NextCardsForGroupList } from "../../../common/events/next-cards-for-group-list";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { sameValueValidator } from "../../common/validators/same-value-validator";
+import { sameValueValidator } from "../../../common/validators/same-value-validator";
 import { MatMenuModule } from "@angular/material/menu";
-import { GroupListFormComponent } from "./group-list-form/group-list-form.component";
+import { GroupListFormComponent } from "../group-list-form/group-list-form.component";
 
 @Component({
   selector: 'app-group-list',

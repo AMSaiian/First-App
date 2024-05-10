@@ -193,6 +193,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
     {
         ChangeParameter[] changeParameters =
         [
+            new() { Name = ChangeCardParametersNames.MainEntityName, Value = entity.Name },
             new() { Name = ChangeCardParametersNames.PreviousValue, Value = entity.Description },
             new() { Name = ChangeCardParametersNames.NewValue, Value = newDescription }
         ];
@@ -211,6 +212,11 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
     {
         ChangeParameter[] changeParameters =
         [
+            new()
+            {
+                Name = ChangeCardParametersNames.MainEntityName,
+                Value = entity.Name
+            },
             new()
             {
                 Name = ChangeCardParametersNames.PreviousValue,

@@ -24,3 +24,11 @@ body {
 .unsafe {
   color: red;
 }
+
+.main-parameter {
+  color: #003067;
+}
+
+.minor-parameter {
+  color: #2c0101;
+}

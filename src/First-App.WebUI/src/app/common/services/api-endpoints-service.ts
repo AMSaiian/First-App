@@ -44,4 +44,12 @@ export class ApiEndpointsService {
   public deleteGroupList(groupListId: number) {
     return [this.baseUrl, this.baseLists, groupListId.toString()].join('/');
   }
+
+  public getChanges() {
+    return [this.baseUrl, this.baseChanges].join('/');
+  }
+
+  public getCardChanges(cardId: number) {
+    return [this.baseUrl, this.baseCards, cardId.toString(), this.baseChanges].join('/');
+  }
 }
