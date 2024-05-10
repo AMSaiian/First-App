@@ -24,6 +24,7 @@
 .new-list-wrapper {
   display: flex;
   width: 20%;
+  min-width: 215px;
   margin-right: 1%;
   flex-shrink: 0;
 }

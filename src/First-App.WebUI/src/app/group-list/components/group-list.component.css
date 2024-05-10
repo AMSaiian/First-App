@@ -3,6 +3,7 @@
   flex-direction: column;
   margin-right: 1%;
   width: 20%;
+  min-width: 215px;
   flex-shrink: 0;
   padding-bottom: 1%;
 }

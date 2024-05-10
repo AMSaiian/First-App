@@ -40,6 +40,8 @@ export class GroupListComponent implements OnInit {
   @Input() anotherLists!: GroupListInfo[]
   @Input() priorities!: Priority[];
   @Output() cardInListUpdated = new EventEmitter<Partial<Card>>;
+  @Output() cardInListRequestedEdit = new EventEmitter<number>;
+  @Output() cardInListDeleted = new EventEmitter<number>;
   @Output() newCardsRequested = new EventEmitter<NextCardsForGroupList>;
   @Output() groupListUpdated = new EventEmitter<Partial<GroupList>>;
   @Output() groupListDeleted = new EventEmitter<number>;
@@ -69,6 +71,14 @@ export class GroupListComponent implements OnInit {
 
   protected onCardInListChanged($event: Partial<Card>) {
     this.cardInListUpdated.emit($event);
+  }
+
+  protected onCardInListRequestedEdit($event: number) {
+    this.cardInListRequestedEdit.emit($event);
+  }
+
+  protected onCardInListDeleted($event: number) {
+    this.cardInListDeleted.emit($event);
   }
 
   protected onNextCardsRequested() {

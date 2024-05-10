@@ -105,7 +105,9 @@ export class GroupListService {
   }
 
   public updateCard(changes: Partial<Card>) {
-    this.http.put(this.apiEndpoints.updateCard(changes.id!), changes)
+    this.http.put(this.apiEndpoints.updateCard(changes.id!), {
+      ...changes, dueDate: changes.dueDate?.toISOString().split('T')[0]
+    })
       .subscribe(() => {
         const previousCards = this.cardsSubject.value;
         const cardToUpdate: Card = previousCards.find(card => card.id === changes.id)!;
@@ -114,10 +116,23 @@ export class GroupListService {
 
         this.cardsSubject.next([...cardsWithoutUpdated, updatedCard]);
 
-        if (changes.groupId !== null) {
+        if (changes?.groupId !== cardToUpdate.groupId) {
           this.handleGroupListSwitch(cardToUpdate.groupId, updatedCard.groupId);
         }
       });
+  }
+
+  public deleteCard(cardId: number) {
+    this.http.delete(this.apiEndpoints.deleteCard(cardId))
+      .subscribe(() => {
+        const cardToDelete = this.cardsSubject.value
+          .find(card => card.id === cardId)!;
+        const cardsWithoutDeleted = this.cardsSubject.value
+          .filter(card => card.id !== cardId);
+
+        this.cardsSubject.next(cardsWithoutDeleted);
+        this.handleGroupListCountChange(cardToDelete.groupId, false);
+      })
   }
 
   public createList(newList: Partial<GroupList>) {

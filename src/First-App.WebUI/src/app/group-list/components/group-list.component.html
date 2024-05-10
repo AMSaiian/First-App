@@ -51,7 +51,9 @@
     [card]="card"
     [priority]="(priorities | filter: { id: card.priorityId })[0]"
     [anotherLists]="anotherLists"
-    (cardUpdated)="onCardInListChanged($event)">
+    (cardUpdated)="onCardInListChanged($event)"
+    (editCardRequested)="onCardInListRequestedEdit($event)"
+    (cardDeleted)="onCardInListDeleted($event)">
   </app-card>
 </ng-container>
 

@@ -5,7 +5,7 @@ import {GroupListComponent} from "./group-list/components/group-list.component";
 import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
-import {mergeMap, Observable, switchMap} from "rxjs";
+import {filter, first, map, mergeMap, Observable, shareReplay, switchMap} from "rxjs";
 import {Card, compareCards} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
@@ -22,8 +22,7 @@ import {MatMenu, MatMenuItem} from "@angular/material/menu";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateCardModalComponent} from "./card/components/create-card-modal/create-card-modal.component";
-import {DateAdapter, MatNativeDateModule} from "@angular/material/core";
-import {MatDatepickerModule} from "@angular/material/datepicker";
+import {C} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'app-root',
@@ -58,8 +57,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.groupListService.getInitGroupListsWithCards(this.paginationService.getCardsInGroupListAmount());
     this.prioritiesService.getPriorities();
+    this.groupListService.getInitGroupListsWithCards(this.paginationService.getCardsInGroupListAmount());
     this.cards$ = this.groupListService.cards$;
     this.groupLists$ = this.groupListService.groupLists$;
     this.priorities$ = this.prioritiesService.priorities$;
@@ -116,12 +115,65 @@ export class AppComponent implements OnInit {
       .afterClosed()
       .subscribe(data => {
         if (data !== undefined) {
-          console.log("modal closed")
           this.groupListService.createCard(data);
         }
       });
   }
 
+  public onCardEditRequested($event: number) {
+    this.cards$
+      .pipe(first(),
+        mergeMap(data => {
+          const cardToUpdate = data.find(card => card.id === $event)!;
+          const form = this.formBuilder.group({
+            cardName: [
+              cardToUpdate.name, [
+                Validators.required,
+                Validators.maxLength(300)
+              ]
+            ],
+            groupId: [
+              cardToUpdate.groupId, [
+                Validators.required
+              ]
+            ],
+            priorityId: [
+              cardToUpdate.priorityId, [
+                Validators.required
+              ]
+            ],
+            description: [
+              cardToUpdate.description, [
+                Validators.maxLength(2000)
+              ]
+            ],
+            dueDate: [
+              cardToUpdate.dueDate, [
+                Validators.required
+              ]
+            ]
+          });
+
+          return this.dialog.open(CreateCardModalComponent, {
+            height: '600px',
+            width: '600px',
+            data: {
+              form: form,
+              priorities$: this.priorities$,
+              groupLists$: this.groupLists$,
+            }
+          }).afterClosed()
+        }))
+      .subscribe(data => {
+        if (data !== undefined) {
+          this.groupListService.updateCard({...data, id: $event});
+        }
+      });
+  }
+
+  public onCardDeleted($event: number) {
+    this.groupListService.deleteCard($event);
+  }
   public onCardUpdated($event: Partial<Card>): void {
     this.groupListService.updateCard($event);
   }

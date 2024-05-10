@@ -30,3 +30,8 @@
 .move-to-wrapper {
   padding: 0 3% 0 3%;
 }
+
+.card-header {
+  justify-content: space-between;
+  padding-right: 4px;
+}
