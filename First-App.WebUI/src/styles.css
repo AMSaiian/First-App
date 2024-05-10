@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0 !important;
+}
+
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  margin: 0;
+  font-family: Roboto,
+  "Helvetica Neue",
+  sans-serif;
+}
+
+.unsafe {
+  color: red;
+}
+
+.main-parameter {
+  color: #003067;
+}
+
+.minor-parameter {
+  color: #2c0101;
+}
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background-color: red !important;
+  }
+
+  .mdc-snackbar__label {
+    color: white !important;
+  }
+  .mdc-button__label {
+    color: white !important;
+  }
+}

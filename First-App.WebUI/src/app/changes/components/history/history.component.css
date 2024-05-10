@@ -1,0 +1,19 @@
+.dialog-title {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-top: 5%;
+}
+
+.dialog-content {
+  height: calc(100% - 96px);
+  max-height: unset;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+.next-changes-button {
+  width: 100%;
+}

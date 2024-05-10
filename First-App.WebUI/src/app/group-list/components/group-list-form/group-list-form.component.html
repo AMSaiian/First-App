@@ -1,0 +1,27 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSaved()"
+  [ngClass]="'edit-group-list-form'">
+  <mat-form-field class="group-name-field">
+    <input matInput type="text" placeholder="List name" formControlName="groupName" />
+    <mat-error *ngIf="form.get('groupName')?.errors?.['required']">Name is required</mat-error>
+    <mat-error *ngIf="form.get('groupName')?.errors?.['maxlength']">Name must be less than 300 characters</mat-error>
+    <mat-error *ngIf="form.get('groupName')?.errors?.['sameAsPrevious']">Name must be different from the initial one</mat-error>
+  </mat-form-field>
+  <div class="edit-buttons-wrapper">
+    <button mat-flat-button color="primary"
+            class="edit-group-button"
+            [color]="'primary'"
+            [type]="'submit'"
+            [disabled]="!form.valid">
+      Save
+    </button>
+    <button mat-flat-button
+            [color]="'warn'"
+            class="edit-group-button"
+            [type]="'button'"
+            (click)="onCancelEdit()">
+      Cancel
+    </button>
+  </div>
+</form>

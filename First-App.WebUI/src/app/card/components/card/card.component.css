@@ -1,0 +1,37 @@
+:host {
+  margin-top: 4%;
+}
+
+.card {
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
+
+.card-due-date, .card-description, .card-priority {
+  margin-top: 5%;
+}
+
+.card-due-date {
+  display: flex;
+  align-items: center;
+}
+
+.card-due-date p {
+  padding-left: 1%;
+}
+
+.card-description {
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.move-to-wrapper {
+  padding: 0 3% 0 3%;
+}
+
+.card-header {
+  justify-content: space-between;
+  padding-right: 4px;
+}

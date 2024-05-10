@@ -1,0 +1,48 @@
+<mat-card class="card">
+  <mat-card-header class="card-header">
+    <mat-card-title>
+      <h2>{{card.name}}</h2>
+    </mat-card-title>
+    <button mat-icon-button
+            class="icon-button-small"
+            [matMenuTriggerFor]="menu"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item
+              (click)="onCardEditRequested()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item
+              (click)="onCardDeleted()">
+        <mat-icon color="warn">delete</mat-icon>
+        <span class="unsafe">Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="card-due-date">
+      <mat-icon>calendar_today</mat-icon>
+      <p>{{card.dueDate | date}}</p>
+    </div>
+    <div class="card-priority">
+      <mat-chip>{{priority.title}}</mat-chip>
+    </div>
+    <div class="card-description">
+      <p class="muted">{{card.description}}</p>
+    </div>
+  </mat-card-content>
+  <div class="move-to-wrapper">
+    <mat-card-actions>
+      <mat-select placeholder="Move to" [(ngModel)]="nextListId" (selectionChange)="onChangedList()">
+        <ng-container *ngFor="let anotherList of anotherLists">
+          <mat-option [value]="anotherList.id">{{anotherList.name}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-card-actions>
+  </div>
+  <mat-card-footer>
+  </mat-card-footer>
+</mat-card>

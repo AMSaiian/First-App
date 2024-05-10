@@ -1,0 +1,63 @@
+<div class="group-list-header">
+  <ng-container *ngIf="!editRequested; else edit">
+    <div class="group-list-name">
+      <h2>{{ groupList.name }}</h2>
+    </div>
+    <div class="group-list-menu-and-amount-wrapper">
+      <div class="group-list-cards-amount">
+        <h3>{{ groupList.cardsAmount }}</h3>
+      </div>
+      <div class="group-list-menu">
+        <button mat-icon-button
+                class="icon-button-small"
+                [matMenuTriggerFor]="menu"
+                >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item
+                  (click)="onEditGroupList()">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item
+                  (click)="onDeleteGroupList()">
+            <mat-icon color="warn">delete</mat-icon>
+            <span class="unsafe">Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #edit>
+    <app-group-list-form
+      class="edit-group-list-form"
+      [form]="editForm"
+      (saved)="onSaveEditGroupList()"
+      (cancelled)="onCancelEdit()"
+    />
+  </ng-template>
+</div>
+
+<button class="new-card-button" mat-raised-button
+        (click)="onCreateCardRequested()">
+  <mat-icon>add</mat-icon>
+  Add new card
+</button>
+
+<ng-container *ngFor="let card of cards">
+  <app-card
+    [card]="card"
+    [priority]="(priorities | filter: { id: card.priorityId })[0]"
+    [anotherLists]="anotherLists"
+    (cardUpdated)="onCardInListChanged($event)"
+    (editCardRequested)="onCardInListRequestedEdit($event)"
+    (cardDeleted)="onCardInListDeleted($event)">
+  </app-card>
+</ng-container>
+
+<button class="next-cards-button" (click)="onNextCardsRequested()" mat-raised-button *ngIf="groupList.hasNextCards">
+  <mat-icon>refresh</mat-icon>
+  More cards
+</button>

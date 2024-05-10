@@ -1,0 +1,19 @@
+<div mat-dialog-title class="dialog-title">
+  <h1>History</h1>
+</div>
+<mat-dialog-content class="mat-typography dialog-content">
+  <ul *ngFor="let change of changes$ | async">
+    <li>
+      <app-change [change]="change"></app-change>
+    </li>
+  </ul>
+  <button *ngIf="hasNextChanges$ | async" mat-raised-button
+          class="next-changes-button"
+          (click)="onNextChangesRequested()"
+          tabindex="-1" >
+    <mat-icon>
+      refresh
+    </mat-icon>
+    Show more
+  </button>
+</mat-dialog-content>

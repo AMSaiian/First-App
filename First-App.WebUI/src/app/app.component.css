@@ -1,0 +1,44 @@
+:host {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 1%;
+}
+
+.group-lists-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.task-board-header {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1%;
+  margin-bottom: 1%;
+}
+
+.new-list-wrapper {
+  display: flex;
+  width: 20%;
+  min-width: 215px;
+  margin-right: 1%;
+  flex-shrink: 0;
+}
+
+.new-group-list-header {
+  display: flex;
+  flex-grow: 1;
+  height: 48px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.new-group-list-button {
+  height: 100%;
+  flex-grow: 1;
+}
+

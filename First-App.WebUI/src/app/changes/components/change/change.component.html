@@ -1,0 +1,8 @@
+<ng-container *ngIf="change.time | date:'medium' as changeTime">
+    <p appHistoryLog
+        [change]="change"
+        [classForMain]="'main-parameter'"
+        [classForMinor]="'minor-parameter'">
+    </p>
+    <p>at {{changeTime}}</p>
+</ng-container>
