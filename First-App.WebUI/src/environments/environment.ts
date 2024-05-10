@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: "https://localhost:7282",
+  baseUrl: "http://localhost:8000",
   pagination: {
     cardsInGroupListAmount: 5,
     changesInHistoryAmount: 20

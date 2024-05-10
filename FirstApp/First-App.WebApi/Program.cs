@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-string? connectionString = builder.Configuration.GetConnectionString("LocalInstance");
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 ArgumentNullException.ThrowIfNullOrEmpty(connectionString);
 
 builder.Services.AddAppDbContext(connectionString);
@@ -60,8 +60,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
-
-app.UseHttpsRedirection();
 
 app.MapControllers();
 
