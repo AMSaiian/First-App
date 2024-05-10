@@ -5,7 +5,7 @@ import {GroupListComponent} from "./group-list/components/group-list.component";
 import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
-import {filter, first, map, mergeMap, Observable, shareReplay, switchMap} from "rxjs";
+import {first, mergeMap, Observable} from "rxjs";
 import {Card, compareCards} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
@@ -22,7 +22,6 @@ import {MatMenu, MatMenuItem} from "@angular/material/menu";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateCardModalComponent} from "./card/components/create-card-modal/create-card-modal.component";
-import {C} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'app-root',
@@ -74,34 +73,7 @@ export class AppComponent implements OnInit {
   }
 
   public onCardCreateRequested($event: number) {
-    const form = this.formBuilder.group({
-      cardName: [
-        '', [
-          Validators.required,
-          Validators.maxLength(300)
-        ]
-      ],
-      groupId: [
-        $event, [
-          Validators.required
-        ]
-      ],
-      priorityId: [
-        1, [
-          Validators.required
-        ]
-      ],
-      description: [
-        '', [
-          Validators.maxLength(2000)
-        ]
-      ],
-      dueDate: [
-        '', [
-          Validators.required
-        ]
-      ]
-    });
+    const form = this.createCardForm({ groupId: $event });
 
     const dialogRef = this.dialog.open(CreateCardModalComponent, {
       height: '600px',
@@ -125,34 +97,7 @@ export class AppComponent implements OnInit {
       .pipe(first(),
         mergeMap(data => {
           const cardToUpdate = data.find(card => card.id === $event)!;
-          const form = this.formBuilder.group({
-            cardName: [
-              cardToUpdate.name, [
-                Validators.required,
-                Validators.maxLength(300)
-              ]
-            ],
-            groupId: [
-              cardToUpdate.groupId, [
-                Validators.required
-              ]
-            ],
-            priorityId: [
-              cardToUpdate.priorityId, [
-                Validators.required
-              ]
-            ],
-            description: [
-              cardToUpdate.description, [
-                Validators.maxLength(2000)
-              ]
-            ],
-            dueDate: [
-              cardToUpdate.dueDate, [
-                Validators.required
-              ]
-            ]
-          });
+          const form = this.createCardForm(cardToUpdate);
 
           return this.dialog.open(CreateCardModalComponent, {
             height: '600px',
@@ -216,4 +161,35 @@ export class AppComponent implements OnInit {
 
   protected createListRequested = false;
   protected createListForm!: FormGroup;
+
+  private createCardForm(initialValues: Partial<Card>): FormGroup {
+    return this.formBuilder.group({
+      cardName: [
+        initialValues?.name ?? '', [
+          Validators.required,
+          Validators.maxLength(300)
+        ]
+      ],
+      groupId: [
+        initialValues?.groupId ?? '', [
+          Validators.required
+        ]
+      ],
+      priorityId: [
+        initialValues?.priorityId ?? '', [
+          Validators.required
+        ]
+      ],
+      description: [
+        initialValues?.description ?? '', [
+          Validators.maxLength(2000)
+        ]
+      ],
+      dueDate: [
+        initialValues?.dueDate ?? '', [
+          Validators.required
+        ]
+      ]
+    });
+  }
 }
