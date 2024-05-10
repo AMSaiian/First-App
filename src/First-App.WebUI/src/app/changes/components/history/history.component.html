@@ -9,7 +9,8 @@
   </ul>
   <button *ngIf="hasNextChanges$ | async" mat-raised-button
           class="next-changes-button"
-          (click)="onNextChangesRequested()">
+          (click)="onNextChangesRequested()"
+          tabindex="-1" >
     <mat-icon>
       refresh
     </mat-icon>

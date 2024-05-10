@@ -33,9 +33,10 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    options.AddDefaultPolicy(corsPolicyBuilder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        corsPolicyBuilder
+            .WithOrigins(builder.Configuration.GetSection("CorsOrigins").Get<string[]>() ?? [])
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -45,9 +46,10 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 
 var app = builder.Build();
 
-// using IServiceScope scope = app.Services.CreateScope();
-// await using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-// await RequiredDataSeeder.PopulateDbContext(dbContext);
+using IServiceScope scope = app.Services.CreateScope();
+await using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+await RequiredDataSeeder.PopulateDbContext(dbContext);
+await TestDataSeeder.PopulateDbContext(dbContext);
 
 app.UseExceptionHandler();
 

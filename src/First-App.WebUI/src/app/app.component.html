@@ -18,7 +18,7 @@
     <ng-container *ngFor="let groupList of data.groupLists?.sort(compareGroupLists)">
       <app-group-list
         [groupList]="groupList"
-        [cards]="(data.cards! | filter: { groupId: groupList.id }).sort(compareCards)"
+        [cards]="(data.cards! | filter: { groupId: groupList.id }).sort(compareCards).reverse()"
         [priorities]="data.priorities!"
         [anotherLists]="(data.groupLists! | filter: excludeGroupListById(groupList.id)).sort(compareGroupLists)"
         [ngClass]="'group-list-wrapper'"

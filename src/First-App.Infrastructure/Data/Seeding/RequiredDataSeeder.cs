@@ -1,5 +1,6 @@
 ﻿using First_App.Core;
 using First_App.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace First_App.Infrastructure.Data.Seeding;
 
@@ -25,8 +26,13 @@ public static class RequiredDataSeeder
 
     public static async Task PopulateDbContext(AppDbContext dbContext)
     {
-        await dbContext.Priorities.AddRangeAsync(Priorities);
-        await dbContext.ChangeTypes.AddRangeAsync(ChangeTypes);
+        await dbContext.Database.EnsureCreatedAsync();
+
+        if (await dbContext.Priorities.CountAsync() == 0)
+            await dbContext.Priorities.AddRangeAsync(Priorities);
+
+        if (await dbContext.ChangeTypes.CountAsync() == 0)
+            await dbContext.ChangeTypes.AddRangeAsync(ChangeTypes);
 
         await dbContext.SaveChangesAsync();
     }

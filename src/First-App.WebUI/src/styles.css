@@ -32,3 +32,16 @@ body {
 .minor-parameter {
   color: #2c0101;
 }
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background-color: red !important;
+  }
+
+  .mdc-snackbar__label {
+    color: white !important;
+  }
+  .mdc-button__label {
+    color: white !important;
+  }
+}

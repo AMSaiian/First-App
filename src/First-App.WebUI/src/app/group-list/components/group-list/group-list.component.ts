@@ -55,7 +55,7 @@ export class GroupListComponent implements OnInit {
       groupName: [
         this.groupList.name, [
           Validators.required,
-          Validators.maxLength(100),
+          Validators.maxLength(300),
           sameValueValidator(this.groupList.name)
         ]
       ]

@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {RouterOutlet} from "@angular/router";
 import {AsyncPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {GroupListComponent} from "./group-list/components/group-list/group-list.component";
 import {FilterPipe} from "./common/pipes/filter-pipe";
 import {HttpClientModule} from "@angular/common/http";
 import {GroupListService} from "./group-list/services/group-list-service";
-import {first, mergeMap, Observable} from "rxjs";
+import {first, mergeMap, Observable, Subject, takeUntil} from "rxjs";
 import {Card, compareCards} from "./common/models/card";
 import {GroupList} from "./common/models/group-list";
 import {ApiEndpointsService} from "./common/services/api-endpoints-service";
@@ -24,6 +24,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {ChangesService} from "./changes/services/changes-service";
 import {HistoryComponent} from "./changes/components/history/history.component";
 import {CardModalComponent} from "./card/components/card-modal/card-modal.component";
+import {ErrorsService} from "./common/services/errors-service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-root',
@@ -39,23 +41,33 @@ import {CardModalComponent} from "./card/components/card-modal/card-modal.compon
     ApiEndpointsService,
     PrioritiesService,
     PaginationSizeService,
-    ChangesService
+    ChangesService,
+    ErrorsService
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'First-App.WebUI';
 
   public cards$!: Observable<Card[]>;
   public groupLists$!: Observable<GroupList[]>;
   public priorities$!: Observable<Priority[]>
 
+  private unsubscribe$ = new Subject<void>;
+
   constructor(private groupListService: GroupListService,
               private prioritiesService: PrioritiesService,
               private paginationService: PaginationSizeService,
               private formBuilder: FormBuilder,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private snackBar: MatSnackBar,
+              private errorsService: ErrorsService) {
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngOnInit(): void {
@@ -65,11 +77,17 @@ export class AppComponent implements OnInit {
     this.groupLists$ = this.groupListService.groupLists$;
     this.priorities$ = this.prioritiesService.priorities$;
 
+    this.errorsService.error$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((error) => {
+        this.openErrorSnackBar(error);
+      })
+
     this.createListForm = this.formBuilder.group({
       groupName: [
         '', [
           Validators.required,
-          Validators.maxLength(100)
+          Validators.maxLength(300)
         ]
       ]
     });
@@ -167,6 +185,15 @@ export class AppComponent implements OnInit {
 
   protected excludeGroupListById(excludeId: number) {
     return (card: Card) => card.id !== excludeId;
+  }
+
+  private openErrorSnackBar(message: string) {
+    this.snackBar.open(message, 'Close', {
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['snackbar-error'],
+      duration: 4000
+    });
   }
 
   protected readonly compareGroupLists = compareGroupLists;

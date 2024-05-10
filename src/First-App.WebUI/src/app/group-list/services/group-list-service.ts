@@ -1,17 +1,19 @@
 ﻿import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, map, Observable } from "rxjs";
+import {BehaviorSubject, map, Observable} from "rxjs";
 import { GroupList } from "../../common/models/group-list";
 import { Card } from "../../common/models/card";
 import { GroupListWithCardsDto } from "../../common/dtos/group-list-with-cards-dto";
 import { PaginationContext } from "../../common/dtos/pagination/pagination-context";
 import { Paginated } from "../../common/dtos/pagination/paginated";
 import { ApiEndpointsService } from "../../common/services/api-endpoints-service";
+import {ErrorsService} from "../../common/services/errors-service";
 
 @Injectable({ providedIn: "root" })
 export class GroupListService {
   constructor(private http: HttpClient,
-              private apiEndpoints: ApiEndpointsService) {
+              private apiEndpoints: ApiEndpointsService,
+              private errorsService: ErrorsService) {
   }
 
   private groupListsSubject: BehaviorSubject<GroupList[]> = new BehaviorSubject<GroupList[]>([]);
@@ -45,7 +47,7 @@ export class GroupListService {
       .subscribe(([groupLists, cards]) => {
         this.groupListsSubject.next(groupLists);
         this.cardsSubject.next(cards);
-      })
+      }, error => this.errorsService.setError("Something went wrong, try later"))
   }
 
   public getGroupListCards(groupListId: number, paginationContext: PaginationContext) {
@@ -82,7 +84,7 @@ export class GroupListService {
             return map;
           }, new Map<number, Card>()).values())
         );
-      })
+      }, error => this.errorsService.setError("Something went wrong, try later"))
   }
 
   public createCard(newCard: Partial<Card>) {
@@ -102,7 +104,7 @@ export class GroupListService {
         const previousStateCards = this.cardsSubject.value;
         this.cardsSubject.next([...previousStateCards, data]);
         this.handleGroupListCountChange(newCard.groupId!, true);
-      })
+      }, error => this.errorsService.setError("Something went wrong, try later"))
   }
 
   public updateCard(changes: Partial<Card>) {
@@ -120,7 +122,7 @@ export class GroupListService {
         if (changes?.groupId !== cardToUpdate.groupId) {
           this.handleGroupListSwitch(cardToUpdate.groupId, updatedCard.groupId);
         }
-      });
+      }, error => this.errorsService.setError("Something went wrong, try later"));
   }
 
   public deleteCard(cardId: number) {
@@ -133,7 +135,7 @@ export class GroupListService {
 
         this.cardsSubject.next(cardsWithoutDeleted);
         this.handleGroupListCountChange(cardToDelete.groupId, false);
-      })
+      }, error => this.errorsService.setError("Something went wrong, try later"))
   }
 
   public createList(newList: Partial<GroupList>) {
@@ -149,7 +151,7 @@ export class GroupListService {
       .subscribe(data => {
         const previousState = this.groupListsSubject.value;
         this.groupListsSubject.next([...previousState, data]);
-      });
+      }, error => this.errorsService.setError("Something went wrong, try later"));
   }
 
   public updateList(changes: Partial<GroupList>) {
@@ -161,7 +163,7 @@ export class GroupListService {
         const updatedList = { ...listToUpdate, ...changes };
 
         this.groupListsSubject.next([...listsWithoutUpdated, updatedList]);
-      });
+      }, error => this.errorsService.setError("Something went wrong, try later"));
   }
 
   public deleteList(listId: number) {
@@ -174,7 +176,7 @@ export class GroupListService {
         const cardsWithoutDeletedWithList = this.cardsSubject.value
           .filter(card => card.groupId !== listId);
         this.cardsSubject.next(cardsWithoutDeletedWithList);
-      });
+      }, error => this.errorsService.setError("Something went wrong, try later"));
   }
 
   private handleGroupListSwitch(fromListId: number, toListId: number) {
