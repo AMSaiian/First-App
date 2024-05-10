@@ -34,14 +34,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card2",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 1,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(5).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -62,14 +62,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card3",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-2).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 2,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(2).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -118,14 +118,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card5",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-10).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 2,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(10).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -175,14 +175,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card7",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 1,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(5).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -203,14 +203,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card8",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-2).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 1,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(2).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -259,14 +259,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List1Card10",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-10).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 1, PriorityId = 1,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(10).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -316,14 +316,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List2Card2",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 2, PriorityId = 1,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(5).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -344,14 +344,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List2Card3",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-2).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 2, PriorityId = 3,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(2).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -400,14 +400,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List2Card5",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-10).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 2, PriorityId = 3,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(10).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -457,14 +457,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List2Card7",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 2, PriorityId = 2,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(5).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -514,14 +514,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List3Card2",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 3, PriorityId = 2,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(5).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -542,14 +542,14 @@ public static class TestDataSeeder
         new()
         {
             Name = "List3Card3",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-2).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 3, PriorityId = 2,
             ChangeHistory =
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(2).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -570,7 +570,7 @@ public static class TestDataSeeder
         new()
         {
             Name = "List3Card4",
-            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2).ToUniversalTime()),
+            DueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-2).ToUniversalTime()),
             Description = CardDescription,
             GroupId = 3, PriorityId = 2,
             IsDeleted = true,
@@ -578,7 +578,7 @@ public static class TestDataSeeder
             [
                 new()
                 {
-                    Time = DateTime.Now.AddDays(1).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
                     Parameters =
                     [
@@ -596,7 +596,7 @@ public static class TestDataSeeder
                 },
                 new()
                 {
-                    Time = DateTime.Now.AddDays(2).ToUniversalTime(),
+                    Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 2,
                     Parameters =
                     [
