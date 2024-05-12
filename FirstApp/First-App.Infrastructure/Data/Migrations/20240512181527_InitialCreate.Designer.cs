@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace First_App.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240505133805_InitialCreate")]
+    [Migration("20240512181527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,24 @@ namespace First_App.Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("First_App.Core.Entities.Board", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Boards");
+                });
 
             modelBuilder.Entity("First_App.Core.Entities.Card", b =>
                 {
@@ -72,6 +90,9 @@ namespace First_App.Infrastructure.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AffectedBoardId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("AffectedCardId")
                         .HasColumnType("integer");
 
@@ -82,6 +103,8 @@ namespace First_App.Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AffectedBoardId");
 
                     b.HasIndex("AffectedCardId");
 
@@ -150,12 +173,17 @@ namespace First_App.Infrastructure.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BoardId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
 
                     b.ToTable("GroupLists");
                 });
@@ -201,6 +229,12 @@ namespace First_App.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("First_App.Core.Entities.Change", b =>
                 {
+                    b.HasOne("First_App.Core.Entities.Board", "AffectedBoard")
+                        .WithMany("Changes")
+                        .HasForeignKey("AffectedBoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("First_App.Core.Entities.Card", "AffectedCard")
                         .WithMany("ChangeHistory")
                         .HasForeignKey("AffectedCardId")
@@ -212,6 +246,8 @@ namespace First_App.Infrastructure.Data.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AffectedBoard");
 
                     b.Navigation("AffectedCard");
 
@@ -227,6 +263,24 @@ namespace First_App.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Change");
+                });
+
+            modelBuilder.Entity("First_App.Core.Entities.GroupList", b =>
+                {
+                    b.HasOne("First_App.Core.Entities.Board", "Board")
+                        .WithMany("GroupLists")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("First_App.Core.Entities.Board", b =>
+                {
+                    b.Navigation("Changes");
+
+                    b.Navigation("GroupLists");
                 });
 
             modelBuilder.Entity("First_App.Core.Entities.Card", b =>

@@ -6,6 +6,8 @@ namespace First_App.Infrastructure.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    public DbSet<Board> Boards { get; set; }
+
     public DbSet<Card> Cards { get; set; }
 
     public DbSet<GroupList> GroupLists { get; set; }
