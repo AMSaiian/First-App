@@ -6,7 +6,6 @@ using First_App.Application.Commands.GroupList.Update;
 using First_App.Application.Common.Dtos;
 using First_App.Application.Common.Dtos.Pagination;
 using First_App.Application.Queries.GroupList.GetGroupCards;
-using First_App.Application.Queries.GroupList.GetGroupListsWithCards;
 using First_App.WebApi.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -47,22 +46,6 @@ public class ListsController(IMediator mediator) : ControllerBase
                                      CancellationToken cancellationToken)
     {
         Result result = await _mediator.Send(new DeleteGroupListCommand(id), cancellationToken);
-
-        return result;
-    }
-
-    [HttpGet]
-    public async Task<Result<List<GroupListWithCardsDto>>> Get([FromQuery] PaginationContext paginationContext,
-                                                               CancellationToken cancellationToken)
-    {
-        paginationContext = paginationContext.PageNum == default
-                         || paginationContext.PageSize == default
-            ? null
-            : paginationContext;
-
-        Result<List<GroupListWithCardsDto>> result =
-            await _mediator.Send(new GetGroupListsWithCardsQuery(paginationContext),
-                                 cancellationToken);
 
         return result;
     }
