@@ -8,7 +8,11 @@ public class Change : BaseEntity
 
     public int TypeId { get; set; }
 
+    public int AffectedBoardId { get; set; }
+
     public int AffectedCardId { get; set; }
+
+    public Board? AffectedBoard { get; set; }
 
     public Card? AffectedCard { get; set; }
 

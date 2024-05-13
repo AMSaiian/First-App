@@ -7,6 +7,9 @@ public class GetChangesQueryValidator : AbstractValidator<GetChangesQuery>
 {
     public GetChangesQueryValidator(IValidator<PaginationContext> paginationContextValidator)
     {
+        RuleFor(query => query.BoardId)
+            .NotEmpty();
+
         RuleFor(query => query.PaginationContext)
             .SetValidator(paginationContextValidator)
             .When(query => query.PaginationContext is not null);

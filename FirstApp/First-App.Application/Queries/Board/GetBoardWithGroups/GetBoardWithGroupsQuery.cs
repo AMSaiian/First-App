@@ -7,29 +7,33 @@ using First_App.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace First_App.Application.Queries.GroupList.GetGroupListsWithCards;
+namespace First_App.Application.Queries.Board.GetBoardWithGroups;
 
-public record GetGroupListsWithCardsQuery(PaginationContext? PaginationContext)
-    : IRequest<Result<List<GroupListWithCardsDto>>>;
+public record GetBoardWithGroupsQuery(int Id, PaginationContext? PaginationContext)
+    : IRequest<Result<BoardWithGroupsDto>>;
 
-public class GetGroupListsWithCardsHandler(AppDbContext context, IMapper mapper)
+public class GetBoardWithGroupsHandler(AppDbContext context, IMapper mapper)
     : PaginatedQueryHandlerBase,
-      IRequestHandler<GetGroupListsWithCardsQuery, Result<List<GroupListWithCardsDto>>>
+      IRequestHandler<GetBoardWithGroupsQuery, Result<BoardWithGroupsDto>>
 {
     private readonly AppDbContext _context = context;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<Result<List<GroupListWithCardsDto>>> Handle(GetGroupListsWithCardsQuery request,
-                                                                  CancellationToken cancellationToken)
+    public async Task<Result<BoardWithGroupsDto>> Handle(GetBoardWithGroupsQuery request,
+                                                         CancellationToken cancellationToken)
     {
-        List<Core.Entities.GroupList> entities = await _context.GroupLists
-            .OrderBy(entity => entity.Name)
+        Core.Entities.Board? board = await _context.Boards
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .Include(board => board.GroupLists)
+            .FirstOrDefaultAsync(board => board.Id == request.Id,
+                                 cancellationToken);
+
+        if (board is null)
+            return Result<BoardWithGroupsDto>.NotFound(nameof(Core.Entities.Board));
 
         List<GroupListWithCardsDto> groupListWithCardDtos = [];
 
-        foreach (var entity in entities)
+        foreach (var entity in board.GroupLists.OrderBy(groupList => groupList.Id))
         {
             var entityCardsQuery = _context.GroupLists
                 .Entry(entity)
@@ -43,15 +47,20 @@ public class GetGroupListsWithCardsHandler(AppDbContext context, IMapper mapper)
 
             var cardDtosWithPagination = new Paginated<CardDto>(
                 _mapper.Map<List<CardDto>>(paginatedCards.Entities),
-                paginatedCards.PagedInfo) ;
+                paginatedCards.PagedInfo);
 
             var groupListWithCardDto =
                 new GroupListWithCardsDto(entity.Id,
                                           entity.Name,
                                           cardDtosWithPagination);
+
             groupListWithCardDtos.Add(groupListWithCardDto);
         }
 
-        return Result.Success(groupListWithCardDtos);
+        BoardWithGroupsDto boardWithGroupsDto = new(board.Id,
+                                board.Name,
+                                groupListWithCardDtos);
+
+        return Result.Success(boardWithGroupsDto);
     }
 }
