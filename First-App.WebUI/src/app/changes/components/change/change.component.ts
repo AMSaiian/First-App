@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {Change} from "../../../common/models/change";
 import {DatePipe, NgIf} from "@angular/common";
 import {HistoryLogDirective} from "../../directives/history-log.directive";
 import {locale} from "moment";
+import { Change } from "../../state/change.model";
 
 @Component({
   selector: 'app-change',

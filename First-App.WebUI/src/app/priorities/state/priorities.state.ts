@@ -3,7 +3,7 @@ import { Priority } from "./priority.model";
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { PrioritiesActions } from "./priorities.actions";
 
-export interface State extends EntityState<Priority>{
+export interface PrioritiesState extends EntityState<Priority>{
 }
 
 const adapter = createEntityAdapter<Priority>();
@@ -14,5 +14,8 @@ export const PrioritiesFeature = createFeature({
   reducer: createReducer(
     initialState,
     on(PrioritiesActions.addPriorities, (state, { priorities }) => adapter.addMany(priorities, state))
-  )
+  ),
+  extraSelectors: baseSelectors => ({
+    ...adapter.getSelectors(baseSelectors.selectPrioritiesState)
+  })
 });

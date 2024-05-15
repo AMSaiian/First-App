@@ -51,12 +51,12 @@ export class BoardService {
     );
   }
 
-  public createBoard(board: Board) {
+  public createBoard(board: Partial<Board>) {
     return this.http.post<number>(this.apiEndpoints.createBoard(), board);
   }
 
-  public updateBoard(board: Board) {
-    return this.http.put(this.apiEndpoints.updateBoard(board.id), board);
+  public updateBoard(board: Partial<Board>) {
+    return this.http.put(this.apiEndpoints.updateBoard(board.id!), board);
   }
 
   public deleteBoard(boardId: number) {

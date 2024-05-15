@@ -14,7 +14,7 @@ export class GroupListService {
   ) {}
 
   public getGroupListCards(groupListId: number, paginationContext: PaginationContext) {
-    this.http.get<Paginated<Card>>(this.apiEndpoints.getGroupListCards(groupListId), {
+    return this.http.get<Paginated<Card>>(this.apiEndpoints.getGroupListCards(groupListId), {
       params: {
         ...paginationContext
       }

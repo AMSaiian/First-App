@@ -1,18 +1,22 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AsyncPipe, NgClass, NgForOf, NgIf, SlicePipe } from "@angular/common";
 import { CardComponent } from "../../../card/components/card/card.component";
-import { Card } from "../../../common/models/card";
-import { GroupList } from '../../../common/models/group-list';
-import { Priority } from "../../../common/models/priority";
-import { FilterPipe } from "../../../common/pipes/filter-pipe";
-import { GroupListInfo } from "../../../common/models/group-list-info";
-import { NextCardsForGroupList } from "../../../common/events/next-cards-for-group-list";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { sameValueValidator } from "../../../common/validators/same-value-validator";
 import { MatMenuModule } from "@angular/material/menu";
 import { GroupListFormComponent } from "../group-list-form/group-list-form.component";
+import { FormsService } from "../../../common/services/forms-service";
+import { GroupList } from "../../state/group-list.model";
+import { GroupListInfo } from "../../state/group-list-info";
+import { Priority } from "../../../priorities/state/priority.model";
+import { Observable, of } from "rxjs";
+import { GroupListsFeature, GroupListsState } from "../../state/group-lists.state";
+import { Store } from "@ngrx/store";
+import { FilterPipe } from "../../../common/pipes/filter-pipe";
+import { Card } from "../../../card/state/card.model";
+import { PrioritiesFeature, PrioritiesState } from "../../../priorities/state/priorities.state";
+import { CardsFeature, CardsState } from "../../../card/state/cards.state";
 
 @Component({
   selector: 'app-group-list',
@@ -20,7 +24,6 @@ import { GroupListFormComponent } from "../group-list-form/group-list-form.compo
   imports: [
     NgForOf,
     CardComponent,
-    FilterPipe,
     SlicePipe,
     MatButton,
     MatIcon,
@@ -29,78 +32,56 @@ import { GroupListFormComponent } from "../group-list-form/group-list-form.compo
     NgClass,
     MatMenuModule,
     MatIconButton,
-    GroupListFormComponent
+    GroupListFormComponent,
+    FilterPipe
   ],
   templateUrl: './group-list.component.html',
   styleUrl: './group-list.component.css'
 })
 export class GroupListComponent implements OnInit {
-  @Input() cards!: Card[];
   @Input() groupList!: GroupList;
-  @Input() anotherLists!: GroupListInfo[]
-  @Input() priorities!: Priority[];
-  @Output() cardInListUpdated = new EventEmitter<Partial<Card>>;
-  @Output() cardInListRequestedEdit = new EventEmitter<number>;
-  @Output() cardInListDeleted = new EventEmitter<number>;
-  @Output() newCardsRequested = new EventEmitter<NextCardsForGroupList>;
-  @Output() groupListUpdated = new EventEmitter<Partial<GroupList>>;
-  @Output() groupListDeleted = new EventEmitter<number>;
-  @Output() createCardRequested = new EventEmitter<number>;
+  cards$!: Observable<Card[]>;
+  anotherLists$!: Observable<GroupListInfo[]>;
+  priorities$!: Observable<Priority[]>;
 
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor(private readonly formsService: FormsService,
+              private readonly groupListsStore: Store<GroupListsState>,
+              private readonly prioritiesStore: Store<PrioritiesState>,
+              private readonly cardsStore: Store<CardsState>
+  ) {}
 
   ngOnInit(): void {
-    this.editForm = this.formBuilder.group({
-      groupName: [
-        this.groupList.name, [
-          Validators.required,
-          Validators.maxLength(300),
-          sameValueValidator(this.groupList.name)
-        ]
-      ]
-    });
+    this.cards$ = this.cardsStore
+      .select(
+        CardsFeature.selectCardsByListId(this.groupList.id)
+      );
+
+    this.anotherLists$ = this.groupListsStore
+      .select(
+        GroupListsFeature.selectAnotherGroupLists(this.groupList.id)
+      );
+
+    this.priorities$ = this.prioritiesStore
+      .select(PrioritiesFeature.selectAll);
   }
 
   protected editForm!: FormGroup;
   protected editRequested = false;
 
-  protected onCreateCardRequested() {
-    this.createCardRequested.emit(this.groupList.id);
+  protected onCreateCard() {
   }
 
-  protected onCardInListChanged($event: Partial<Card>) {
-    this.cardInListUpdated.emit($event);
+  protected onNextCards() {
   }
 
-  protected onCardInListRequestedEdit($event: number) {
-    this.cardInListRequestedEdit.emit($event);
-  }
-
-  protected onCardInListDeleted($event: number) {
-    this.cardInListDeleted.emit($event);
-  }
-
-  protected onNextCardsRequested() {
-    this.newCardsRequested.emit({
-      groupListId: this.groupList.id,
-      nextPage: this.groupList.currentPage + 1
-    });
-  }
-
-  protected onEditGroupList() {
+  protected onEdit() {
     this.editRequested = true;
   }
 
-  protected onDeleteGroupList() {
-    this.groupListDeleted.emit(this.groupList.id);
+  protected onDelete() {
   }
 
-  protected onSaveEditGroupList() {
-    this.groupListUpdated.emit({
-      id: this.groupList.id,
-      name: this.editForm.value.groupName
-    });
+  protected onSaveEdit() {
 
     this.editRequested = false;
   }

@@ -16,12 +16,12 @@
         </button>
         <mat-menu #menu="matMenu" xPosition="before">
           <button mat-menu-item
-                  (click)="onEditGroupList()">
+                  (click)="onEdit()">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
           </button>
           <button mat-menu-item
-                  (click)="onDeleteGroupList()">
+                  (click)="onDelete()">
             <mat-icon color="warn">delete</mat-icon>
             <span class="unsafe">Delete</span>
           </button>
@@ -34,30 +34,33 @@
     <app-group-list-form
       class="edit-group-list-form"
       [form]="editForm"
-      (saved)="onSaveEditGroupList()"
+      (saved)="onSaveEdit()"
       (cancelled)="onCancelEdit()"
     />
   </ng-template>
 </div>
 
 <button class="new-card-button" mat-raised-button
-        (click)="onCreateCardRequested()">
+        (click)="onCreateCard()">
   <mat-icon>add</mat-icon>
   Add new card
 </button>
 
-<ng-container *ngFor="let card of cards">
-  <app-card
-    [card]="card"
-    [priority]="(priorities | filter: { id: card.priorityId })[0]"
-    [anotherLists]="anotherLists"
-    (cardUpdated)="onCardInListChanged($event)"
-    (editCardRequested)="onCardInListRequestedEdit($event)"
-    (cardDeleted)="onCardInListDeleted($event)">
-  </app-card>
+<ng-container *ngIf="{
+      anotherLists: anotherLists$ | async,
+      cards: cards$ | async,
+      priorities: priorities$ | async
+    } as data">
+  <ng-container *ngFor="let card of data.cards">
+    <app-card
+      [card]="card"
+      [priority]="(data.priorities ?? [] | filter: { id: card.priorityId })[0]"
+      [anotherLists]="data.anotherLists ?? []">
+    </app-card>
+  </ng-container>
 </ng-container>
 
-<button class="next-cards-button" (click)="onNextCardsRequested()" mat-raised-button *ngIf="groupList.hasNextCards">
+<button class="next-cards-button" (click)="onNextCards()" mat-raised-button *ngIf="groupList.hasNextCards">
   <mat-icon>refresh</mat-icon>
   More cards
 </button>

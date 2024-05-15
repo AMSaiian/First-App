@@ -1,11 +1,13 @@
 ﻿import { createActionGroup, props } from '@ngrx/store';
 import { Change } from './change.model';
+import { PaginationContext } from "../../common/dtos/pagination/pagination-context";
+import { Paginated } from "../../common/dtos/pagination/paginated";
 
 export const ChangesActions = createActionGroup({
   source: "Changes",
   events: {
-    addChanges: props<{ changes: Change[] }>(),
-    apiGetCardChanges: props<{ cardId: number }>(),
-    apiGetBoardChanges: props<{ boardId: number }>()
+    addChanges: props<{ changes: Paginated<Change> }>(),
+    apiGetCardChanges: props<{ cardId: number, paginationContext: PaginationContext }>(),
+    apiGetBoardChanges: props<{ boardId: number, paginationContext: PaginationContext }>()
   }
 });
