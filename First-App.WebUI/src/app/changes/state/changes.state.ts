@@ -18,8 +18,17 @@ export const ChangesFeature = createFeature({
   name: "changes",
   reducer: createReducer(
     initialState,
+    on(ChangesActions.resetChanges, (state) => ({
+      ...adapter.removeAll(state),
+      hasNextChanges: true,
+      currentPage: 1
+    })),
+    on(ChangesActions.incrementPageNum, (state) => ({
+      ...state,
+      currentPage: state.currentPage + 1
+    })),
     on(ChangesActions.addChanges, (state, { changes }) => ({
-      ...adapter.setAll(changes.entities, state),
+      ...adapter.addMany(changes.entities, state),
       hasNextChanges: changes.pagedInfo.totalPages > changes.pagedInfo.pageNumber,
       currentPage: changes.pagedInfo.pageNumber
     }))

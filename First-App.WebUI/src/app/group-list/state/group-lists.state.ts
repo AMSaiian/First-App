@@ -19,7 +19,7 @@ export const GroupListsFeature = createFeature({
     ),
 
     on(GroupListsActions.addList, (state, { groupList }) =>
-      adapter.addOne(groupList as GroupList, state)
+      adapter.addOne(groupList, state)
     ),
 
     on(GroupListsActions.updateList, (state, { groupListChanges }) =>
@@ -80,9 +80,15 @@ export const GroupListsFeature = createFeature({
     ),
     selectAnotherGroupLists: (listId: number) => createSelector(
       baseSelectors.selectEntities,
-      (entities) => Object
-        .values(entities)
-        .filter(groupList => groupList?.id !== listId) as GroupList[]
+      (entities) => {
+        const ignoreGroupList = entities[listId];
+        return Object
+          .values(entities)
+          .filter(groupList =>
+            groupList?.id !== listId
+            && groupList?.boardId === ignoreGroupList?.boardId
+          ) as GroupList[]
+      }
     )
   })
 })

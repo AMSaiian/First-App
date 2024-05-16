@@ -19,9 +19,9 @@ export class BoardService {
     return this.http.get<Board[]>(this.apiEndpoints.getBoards());
   }
 
-  public getBoardWithLists(boardId: number, paginationContext: PaginationContext) {
+  public getBoardWithLists(id: number, paginationContext: PaginationContext) {
     return this.http.get<BoardWithGroupListsDto>(
-      this.apiEndpoints.getBoardWithLists(boardId), {
+      this.apiEndpoints.getBoardWithLists(id), {
         params: {
           ...paginationContext
         }
@@ -55,11 +55,11 @@ export class BoardService {
     return this.http.post<number>(this.apiEndpoints.createBoard(), board);
   }
 
-  public updateBoard(board: Partial<Board>) {
-    return this.http.put(this.apiEndpoints.updateBoard(board.id!), board);
+  public updateBoard(id: number, board: Partial<Board>) {
+    return this.http.put(this.apiEndpoints.updateBoard(id), board);
   }
 
-  public deleteBoard(boardId: number) {
-    return this.http.delete(this.apiEndpoints.deleteBoard(boardId));
+  public deleteBoard(id: number) {
+    return this.http.delete(this.apiEndpoints.deleteBoard(id));
   }
 }

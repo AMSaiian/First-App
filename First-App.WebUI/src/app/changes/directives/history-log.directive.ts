@@ -1,5 +1,5 @@
 import {Directive, ElementRef, Input, Renderer2, SimpleChanges} from '@angular/core';
-import { Change } from "../../common/models/change";
+import { Change } from "../state/change.model";
 
 @Directive({
   selector: '[appHistoryLog]',

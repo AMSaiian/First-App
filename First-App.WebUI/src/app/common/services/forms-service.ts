@@ -12,7 +12,7 @@ export class FormsService {
 
   public createCardForm(initialValues: Partial<Card>): FormGroup {
     return this.builder.group({
-      cardName: [
+      name: [
         initialValues?.name ?? '', [
           Validators.required,
           Validators.maxLength(300)
@@ -41,7 +41,7 @@ export class FormsService {
     });
   }
 
-  public createGroupListFrom(initialValues: Partial<GroupList>): FormGroup {
+  public createGroupListForm(initialValues: Partial<GroupList>): FormGroup {
     let validators = [
       Validators.required,
       Validators.maxLength(300)
@@ -52,7 +52,7 @@ export class FormsService {
     }
 
     return this.builder.group({
-      groupName: [
+      name: [
         initialValues.name,
         validators
       ]

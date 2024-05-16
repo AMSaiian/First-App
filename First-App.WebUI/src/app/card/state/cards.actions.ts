@@ -7,16 +7,17 @@ export const CardsActions = createActionGroup({
   events: {
     addCards: props<{ cards: Card[] }>(),
 
-    beforeAddCard: props<{ card: Partial<Card> }>(),
-    postAddCard: props<{ card: Card }>(),
+    apiAddCard: props<{ card: Partial<Card> }>(),
     addCard: props<{ card: Card }>(),
 
-    beforeUpdateCard: props<{ cardChanges: Update<Card> }>(),
-    postUpdateCard: props<{ cardChanges: Update<Card> }>(),
-    updateCard: props<{ cardChanges: Update<Card> }>(),
+    apiUpdateCard: props<{ id: number, changes: Partial<Card> }>(),
+    beforeUpdateCard: props<{ card: Update<Card> }>(),
+    updateCard: props<{ card: Update<Card> }>(),
 
+    apiDeleteCard: props<{ cardId: number }>(),
     beforeDeleteCard: props<{ cardId: number }>(),
-    postDeleteCard: props<{ cardId: number }>(),
-    deleteCard: props<{ cardId: number }>()
+    deleteCard: props<{ cardId: number }>(),
+
+    deleteCards: props<{ cardIds: number[] }>()
   },
 });

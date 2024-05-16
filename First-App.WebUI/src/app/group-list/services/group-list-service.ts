@@ -25,11 +25,11 @@ export class GroupListService {
     return this.http.post<number>(this.apiEndpoints.createGroupList(), newList);
   }
 
-  public updateList(changes: Partial<GroupList>) {
-    return this.http.put(this.apiEndpoints.updateGroupList(changes.id!), changes);
+  public updateList(id: number, changes: Partial<GroupList>) {
+    return this.http.put(this.apiEndpoints.updateGroupList(id), changes);
   }
 
-  public deleteList(listId: number) {
-    return this.http.delete(this.apiEndpoints.deleteGroupList(listId));
+  public deleteList(id: number) {
+    return this.http.delete(this.apiEndpoints.deleteGroupList(id));
   }
 }

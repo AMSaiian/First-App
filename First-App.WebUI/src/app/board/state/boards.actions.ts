@@ -8,14 +8,15 @@ import { PaginationContext } from "../../common/dtos/pagination/pagination-conte
 export const BoardsActions = createActionGroup({
   source: "Boards",
   events: {
-    createBoard: props<{ board: Partial<Board> }>(),
+    apiAddBoard: props<{ board: Partial<Board> }>(),
     addBoard: props<{ board: Board }>(), //+
+
     addBoards: props<{ boards: Board[] }>(), //++
 
+    apiUpdateBoard: props<{ id: number, changes: Partial<Board> }>(),
     updateBoard: props<{ boardChanges: Update<Board> }>(), //++
 
-    beforeDeleteBoard: props<{ boardId: number }>(),
-    postDeleteBoard: props<{ boardId: number }>(),
+    apiDeleteBoard: props<{ boardId: number }>(),
     deleteBoard: props<{ boardId: number }>(), //+
 
     apiGetBoards: emptyProps(),

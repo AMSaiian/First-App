@@ -16,7 +16,8 @@ export const CardsFeature = createFeature({
     on(CardsActions.addCards, (state, { cards }) => adapter.addMany(cards, state)),
     on(CardsActions.addCard, (state, { card }) => adapter.addOne(card, state)),
     on(CardsActions.deleteCard, (state, { cardId }) => adapter.removeOne(cardId, state)),
-    on(CardsActions.updateCard, (state, { cardChanges }) => adapter.updateOne(cardChanges, state))
+    on(CardsActions.deleteCards, (state, { cardIds }) => adapter.removeMany(cardIds, state)),
+    on(CardsActions.updateCard, (state, { card }) => adapter.updateOne(card, state))
   ),
   extraSelectors: baseSelectors => ({
     ...adapter.getSelectors(baseSelectors.selectCardsState),
@@ -27,6 +28,10 @@ export const CardsFeature = createFeature({
     selectCardsByListId: (listId: number) => createSelector(
       baseSelectors.selectEntities,
       (entities) => Object.values(entities).filter(entity => entity!.groupId === listId) as Card[]
+    ),
+    selectCardsByListIds: (listIds: number[]) => createSelector(
+      baseSelectors.selectEntities,
+      (entities) => Object.values(entities).filter(entity => listIds.includes(entity!.groupId)) as Card[]
     )
   })
 });

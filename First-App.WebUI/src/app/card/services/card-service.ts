@@ -16,8 +16,8 @@ export class CardService {
     });
   }
 
-  public updateCard(changes: Partial<Card>) {
-    return this.http.put(this.apiEndpoints.updateCard(changes.id!), {
+  public updateCard(id: number, changes: Partial<Card>) {
+    return this.http.put(this.apiEndpoints.updateCard(id), {
       ...changes,
       dueDate: changes.dueDate?.toISOString().split('T')[0]
     });

@@ -8,49 +8,57 @@ import { catchError, EMPTY, exhaustMap, map } from "rxjs";
 import { Update } from "@ngrx/entity";
 import { GroupList } from "./group-list.model";
 import { Store } from "@ngrx/store";
-import { GroupListsFeature, GroupListsState } from "./group-lists.state";
+import { GroupListsFeature } from "./group-lists.state";
 import { BoardsActions } from "../../board/state/boards.actions";
-import { UpdateNum } from "@ngrx/entity/src/models";
+import { CardsActions } from "../../card/state/cards.actions";
+import { CardsFeature } from "../../card/state/cards.state";
 
 @Injectable({ providedIn: "root" })
 export class GroupListsEffects {
 
-  constructor(private readonly groupListsStore: Store<GroupListsState>,
+  constructor(private readonly store: Store,
               private readonly actions$: Actions,
               private readonly groupListService: GroupListService,
               private readonly errorService: ErrorsService
   ) {}
 
-  public readonly addGroupList$ = createEffect(() =>
+  public readonly apiAddList$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GroupListsActions.addList),
+      ofType(GroupListsActions.apiAddList),
       exhaustMap(props => this.groupListService.createList(props.groupList)
         .pipe(
-          map(data => GroupListsActions.addList({ groupList: { ...props.groupList, id: data } })),
+          map(data => GroupListsActions.addList({
+            groupList: {
+              ...props.groupList,
+              id: data
+            } as GroupList
+          })),
           catchError(error => EMPTY)
         )
       )
     )
   )
 
-  public readonly updateGroupList$ = createEffect(() =>
+  public readonly apiUpdateList$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GroupListsActions.updateList),
-      exhaustMap(props => this.groupListService.updateList({
-        ...props.groupListChanges.changes,
-        id: (props.groupListChanges as UpdateNum<GroupList>).id
-      })
+      ofType(GroupListsActions.apiUpdateList),
+      exhaustMap(props => this.groupListService.updateList(props.id, props.changes)
         .pipe(
-          map(() => GroupListsActions.updateList({ groupListChanges: props.groupListChanges })),
+          map(() => GroupListsActions.updateList({
+            groupListChanges: {
+              id: props.id,
+              changes: props.changes
+            }
+          })),
           catchError(error => EMPTY)
         )
       )
     )
   )
 
-  public readonly beforeDeleteList$ = createEffect(() =>
+  public readonly apiDeleteList$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GroupListsActions.beforeDeleteList),
+      ofType(GroupListsActions.apiDeleteList),
       exhaustMap(props => this.groupListService.deleteList(props.listId)
         .pipe(
           map(() => GroupListsActions.deleteList({ listId: props.listId })),
@@ -67,7 +75,7 @@ export class GroupListsEffects {
     )
   );
 
-  public readonly apiGetNextListCards$ = createEffect(() =>
+  public readonly apiGetListCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(GroupListsActions.apiGetListCards),
       exhaustMap(props => this.groupListService.getGroupListCards(props.listId, props.paginationContext)
@@ -95,22 +103,52 @@ export class GroupListsEffects {
     )
   );
 
-  public readonly postDeleteBoard$ = createEffect(() =>
+  public readonly deleteBoard$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BoardsActions.postDeleteBoard),
+      ofType(BoardsActions.deleteBoard),
       concatLatestFrom(action =>
-        this.groupListsStore.select(GroupListsFeature.selectGroupListsByBoardId(action.boardId))
+        this.store.select(GroupListsFeature.selectGroupListsByBoardId(action.boardId))
       ),
       map(([, groupLists]) =>
-        GroupListsActions.beforeDeleteLists({ listIds: groupLists.map(groupList => groupList!.id) })
+        GroupListsActions.deleteLists({ listIds: groupLists.map(groupList => groupList.id) })
       )
     )
   );
 
-  public readonly beforeDeleteLists$ = createEffect(() =>
+  public readonly addCard$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GroupListsActions.beforeDeleteLists),
-      map(props => GroupListsActions.deleteLists({ listIds: props.listIds }))
+      ofType(CardsActions.addCard),
+      map(props => GroupListsActions.incrementCardAmount({ listId: props.card.groupId }))
     )
   );
+
+  public readonly beforeDeleteCard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CardsActions.beforeDeleteCard),
+      concatLatestFrom(action =>
+        this.store.select(CardsFeature.selectCardById(action.cardId))
+      ),
+      map(([, card]) => GroupListsActions.decrementCardAmount({ listId: card.groupId }))
+    )
+  );
+
+  public readonly beforeUpdateCard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CardsActions.beforeUpdateCard),
+      concatLatestFrom(action =>
+        this.store.select(CardsFeature.selectCardById(action.card.id as number))
+      ),
+      map(([action, currentCard]) => {
+        const previousGroupId = currentCard.groupId;
+        const newGroupId = action.card.changes.groupId;
+
+        if (newGroupId != null
+        && newGroupId !== previousGroupId) {
+          return GroupListsActions.exchangeCardAmount({ donorId: previousGroupId, recipientId: newGroupId });
+        } else {
+          return EMPTY;
+        }
+      })
+    ), { dispatch: false }
+  )
 }

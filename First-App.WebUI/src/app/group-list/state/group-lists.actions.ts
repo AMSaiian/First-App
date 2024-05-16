@@ -8,15 +8,18 @@ import { PaginationContext } from "../../common/dtos/pagination/pagination-conte
 export const GroupListsActions = createActionGroup({
   source: "GroupLists",
   events : {
-    addLists: props<{ groupLists: GroupList[] }>(),
-    addList: props<{ groupList: Partial<GroupList> }>(),
+    apiAddList: props<{ groupList: Partial<GroupList> }>(),
+    addList: props<{ groupList: GroupList }>(),
 
+    addLists: props<{ groupLists: GroupList[] }>(),
+
+    apiUpdateList: props<{ id: number, changes: Partial<GroupList> }>(),
     updateList: props<{ groupListChanges: Update<GroupList> }>(),
 
-    beforeDeleteList: props<{ listId: number }>(),
+    apiDeleteList: props<{ listId: number }>(),
     deleteList: props<{ listId: number }>(),
 
-    beforeDeleteLists: props<{ listIds: number[] }>(),
+    apiDeleteLists: props<{ listIds: number[] }>(),
     deleteLists: props<{ listIds: number[] }>(),
 
     apiGetListCards: props<{ listId: number, paginationContext: PaginationContext }>(),

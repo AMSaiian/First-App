@@ -1,44 +1,7 @@
-<div class="task-board-header">
-  <h1>
-    My Task Board
-  </h1>
-  <button mat-raised-button>
-    <mat-icon>schedule</mat-icon>
-    History
-  </button>
-</div>
+<nav>
+  <ul *ngFor="let board of boards$ | async">
+    <li><a routerLink="/boards/{{board.id}}" routerLinkActive="active" ariaCurrentWhenActive="page">{{board.name}}</a></li>
+  </ul>
+</nav>
 
-<div class="group-lists-wrapper">
-
-  <ng-container *ngIf="{
-      groupLists: groupLists$ | async,
-    } as data">
-    <ng-container *ngFor="let groupList of data.groupLists">
-      <app-group-list
-        [groupList]="groupList"
-        [ngClass]="'group-list-wrapper'">
-      </app-group-list>
-    </ng-container>
-  </ng-container>
-
-  <div class="new-list-wrapper">
-    <div class="new-group-list-header">
-      <ng-container *ngIf="!createListRequested; else create">
-        <button mat-button
-                (click)="onCreateListRequested()"
-                class="new-group-list-button">
-          <h2>Add new group list</h2>
-          <mat-icon>add</mat-icon>
-        </button>
-      </ng-container>
-
-      <ng-template #create>
-<!--        <app-group-list-form-->
-<!--          [form]="createListForm"-->
-<!--          (saved)="onCreateList()"-->
-<!--          (cancelled)="onCancelCreateList()"-->
-<!--        />-->
-      </ng-template>
-    </div>
-  </div>
-</div>
+<router-outlet></router-outlet>

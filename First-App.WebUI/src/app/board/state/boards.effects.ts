@@ -4,8 +4,6 @@ import { BoardService } from "../services/board-service";
 import { ErrorsService } from "../../common/services/errors-service";
 import { BoardsActions } from "./boards.actions";
 import { catchError, EMPTY, exhaustMap, map } from "rxjs";
-import { UpdateNum } from "@ngrx/entity/src/models";
-import { Board } from "./board.model";
 
 @Injectable({ providedIn: "root" })
 export class BoardsEffects {
@@ -15,9 +13,9 @@ export class BoardsEffects {
               private readonly errorService: ErrorsService
   ) {}
 
-  public readonly createBoard$ = createEffect(() =>
+  public readonly apiAddBoard$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BoardsActions.createBoard),
+      ofType(BoardsActions.apiAddBoard),
       exhaustMap((props) => this.boardService.createBoard(props.board)
         .pipe(
           map(data => BoardsActions.addBoard({ board: { id: data, name: props.board.name! } })),
@@ -27,15 +25,17 @@ export class BoardsEffects {
     )
   );
 
-  public readonly updateBoard$ = createEffect(() =>
+  public readonly apiUpdateBoard$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BoardsActions.updateBoard),
-      exhaustMap((props) => this.boardService.updateBoard({
-        ...props.boardChanges.changes,
-        id: (props.boardChanges as UpdateNum<Board>).id
-      })
+      ofType(BoardsActions.apiUpdateBoard),
+      exhaustMap(props => this.boardService.updateBoard(props.id, props.changes)
         .pipe(
-          map(() => BoardsActions.updateBoard({ boardChanges: props.boardChanges })),
+          map(() => BoardsActions.updateBoard({
+            boardChanges: {
+              id: props.id,
+              changes: props.changes
+            }
+          })),
           catchError(error => EMPTY)
         )
       )
@@ -74,22 +74,15 @@ export class BoardsEffects {
     )
   );
 
-  public readonly beforeDeleteBoard$ = createEffect(() =>
+  public readonly apiDeleteBoard$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BoardsActions.beforeDeleteBoard),
+      ofType(BoardsActions.apiDeleteBoard),
       exhaustMap(props => this.boardService.deleteBoard(props.boardId)
         .pipe(
-          map(() => BoardsActions.postDeleteBoard({ boardId: props.boardId })),
+          map(() => BoardsActions.deleteBoard({ boardId: props.boardId })),
           catchError(error => EMPTY)
         )
       )
-    )
-  );
-
-  public readonly postDeleteBoard$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(BoardsActions.postDeleteBoard),
-      map((props) => BoardsActions.deleteBoard({ boardId: props.boardId }))
     )
   );
 }
