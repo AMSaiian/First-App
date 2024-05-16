@@ -1,7 +1,7 @@
 ﻿import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on, createFeature, createSelector } from "@ngrx/store";
 import { CardsActions } from "./cards.actions";
-import { Card } from './card.model';
+import { Card, compareCards } from './card.model';
 
 export interface CardsState extends EntityState<Card> {
 }
@@ -13,7 +13,7 @@ export const CardsFeature = createFeature({
   name: "cards",
   reducer: createReducer(
     initialState,
-    on(CardsActions.addCards, (state, { cards }) => adapter.addMany(cards, state)),
+    on(CardsActions.addCards, (state, { cards }) => adapter.setMany(cards, state)),
     on(CardsActions.addCard, (state, { card }) => adapter.addOne(card, state)),
     on(CardsActions.deleteCard, (state, { cardId }) => adapter.removeOne(cardId, state)),
     on(CardsActions.deleteCards, (state, { cardIds }) => adapter.removeMany(cardIds, state)),
@@ -27,7 +27,9 @@ export const CardsFeature = createFeature({
     ),
     selectCardsByListId: (listId: number) => createSelector(
       baseSelectors.selectEntities,
-      (entities) => Object.values(entities).filter(entity => entity!.groupId === listId) as Card[]
+      (entities) => (Object.values(entities)
+        .filter(entity => entity!.groupId === listId) as Card[])
+        .sort(compareCards)
     ),
     selectCardsByListIds: (listIds: number[]) => createSelector(
       baseSelectors.selectEntities,

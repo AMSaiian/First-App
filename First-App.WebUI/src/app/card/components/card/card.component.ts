@@ -14,6 +14,8 @@ import { Card } from "../../state/card.model";
 import { GroupListInfo } from "../../../group-list/state/group-list-info";
 import { Priority } from "../../../priorities/state/priority.model";
 import { MatDialog } from "@angular/material/dialog";
+import { CardModalComponent } from "../card-modal/card-modal.component";
+import { FormsService } from "../../../common/services/forms-service";
 
 @Component({
   selector: 'app-card',
@@ -28,25 +30,37 @@ export class CardComponent {
   @Input() anotherLists!: GroupListInfo[];
 
   constructor(private readonly cardsStore: Store<CardsState>,
-              private readonly modalRef: MatDialog
+              private readonly dialog: MatDialog,
+              private readonly formsService: FormsService
   ) {}
 
   public onCardDeleted() {
-    this.cardsStore.dispatch(CardsActions.beforeDeleteCard({ cardId: this.card.id }))
+    this.cardsStore.dispatch(CardsActions.apiDeleteCard({ cardId: this.card.id }))
   }
 
   public onChangedList(nextListId: number) {
-    this.cardsStore.dispatch(CardsActions.beforeUpdateCard({
-      cardChanges: {
-        id: this.card.id,
-        changes: {
-          groupId: nextListId
-        }
+    this.cardsStore.dispatch(CardsActions.apiUpdateCard({
+      id: this.card.id,
+      changes: {
+        groupId: nextListId
       }
     }))
   }
 
   public onCardEdit() {
-
+    const dialogRef = this.dialog.open(CardModalComponent, {
+      height: '600px',
+      width: '600px',
+      data: {
+        title: "Create card",
+        form: this.formsService.createCardForm(this.card)
+      }
+    })
+      .afterClosed()
+      .subscribe(data => {
+        if (data !== undefined) {
+          this.cardsStore.dispatch(CardsActions.apiUpdateCard({ id: this.card.id, changes: data }));
+        }
+      });
   }
 }

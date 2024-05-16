@@ -2,11 +2,14 @@
 import { createEntityAdapter, EntityState } from "@ngrx/entity";
 import { createFeature, createReducer, createSelector, on } from "@ngrx/store";
 import { GroupListsActions } from "./group-lists.actions";
+import { compareGroupLists, GroupListInfo } from "./group-list-info";
 
 export interface GroupListsState extends EntityState<GroupList> {
 }
 
-const adapter = createEntityAdapter<GroupList>();
+const adapter = createEntityAdapter<GroupList>({
+  sortComparer: compareGroupLists
+});
 const initialState = adapter.getInitialState();
 
 export const GroupListsFeature = createFeature({
@@ -74,20 +77,22 @@ export const GroupListsFeature = createFeature({
     ),
     selectGroupListsByBoardId: (boardId: number) => createSelector(
       baseSelectors.selectEntities,
-      (entities) => Object
+      (entities) => (Object
         .values(entities)
-        .filter(groupList => groupList?.boardId === boardId) as GroupList[]
+        .filter(groupList => groupList?.boardId === boardId) as GroupList[])
+        .sort(compareGroupLists)
     ),
     selectAnotherGroupLists: (listId: number) => createSelector(
       baseSelectors.selectEntities,
       (entities) => {
         const ignoreGroupList = entities[listId];
-        return Object
+        return (Object
           .values(entities)
           .filter(groupList =>
             groupList?.id !== listId
             && groupList?.boardId === ignoreGroupList?.boardId
-          ) as GroupList[]
+          ) as GroupListInfo[])
+          .sort(compareGroupLists)
       }
     )
   })

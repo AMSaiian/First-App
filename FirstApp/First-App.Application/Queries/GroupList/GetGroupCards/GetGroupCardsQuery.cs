@@ -41,7 +41,8 @@ public class GetGroupCardsHandler(AppDbContext context, IMapper mapper)
 
         var paginatedEntities = await ProcessPagination(cardsQuery,
                                                         card => card.DueDate,
-                                                        request.PaginationContext);
+                                                        request.PaginationContext,
+                                                        false);
 
         var dtos = _mapper.Map<List<CardDto>>(paginatedEntities.Entities);
 

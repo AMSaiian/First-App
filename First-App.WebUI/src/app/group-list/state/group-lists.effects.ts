@@ -4,7 +4,7 @@ import { concatLatestFrom } from "@ngrx/operators";
 import { GroupListService } from "../services/group-list-service";
 import { ErrorsService } from "../../common/services/errors-service";
 import { GroupListsActions } from "./group-lists.actions";
-import { catchError, EMPTY, exhaustMap, map } from "rxjs";
+import { catchError, EMPTY, exhaustMap, filter, map } from "rxjs";
 import { Update } from "@ngrx/entity";
 import { GroupList } from "./group-list.model";
 import { Store } from "@ngrx/store";
@@ -138,17 +138,19 @@ export class GroupListsEffects {
       concatLatestFrom(action =>
         this.store.select(CardsFeature.selectCardById(action.card.id as number))
       ),
-      map(([action, currentCard]) => {
+      filter(([action, currentCard]) => {
         const previousGroupId = currentCard.groupId;
         const newGroupId = action.card.changes.groupId;
 
-        if (newGroupId != null
-        && newGroupId !== previousGroupId) {
-          return GroupListsActions.exchangeCardAmount({ donorId: previousGroupId, recipientId: newGroupId });
-        } else {
-          return EMPTY;
-        }
-      })
-    ), { dispatch: false }
+        return newGroupId != null && previousGroupId !== newGroupId;
+      }),
+      map(([action, currentCard]) =>
+        GroupListsActions.exchangeCardAmount({
+          donorId: currentCard.groupId,
+          recipientId: action.card.changes.groupId!
+        })
+      )
+    )
   )
 }
+

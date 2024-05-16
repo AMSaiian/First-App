@@ -1,22 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AsyncPipe, NgClass, NgForOf, NgIf, SlicePipe } from "@angular/common";
 import { CardComponent } from "../../../card/components/card/card.component";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormGroup } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { GroupListFormComponent } from "../group-list-form/group-list-form.component";
 import { FormsService } from "../../../common/services/forms-service";
 import { GroupList } from "../../state/group-list.model";
 import { GroupListInfo } from "../../state/group-list-info";
+import { GroupListsActions } from "../../state/group-lists.actions"
 import { Priority } from "../../../priorities/state/priority.model";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { GroupListsFeature, GroupListsState } from "../../state/group-lists.state";
 import { Store } from "@ngrx/store";
 import { FilterPipe } from "../../../common/pipes/filter-pipe";
-import { Card } from "../../../card/state/card.model";
+import { Card, compareCards } from "../../../card/state/card.model";
 import { PrioritiesFeature, PrioritiesState } from "../../../priorities/state/priorities.state";
 import { CardsFeature, CardsState } from "../../../card/state/cards.state";
+import { MatDialog } from "@angular/material/dialog";
+import { CardModalComponent } from "../../../card/components/card-modal/card-modal.component";
+import { CardsActions } from "../../../card/state/cards.actions";
 
 @Component({
   selector: 'app-group-list',
@@ -40,35 +44,51 @@ import { CardsFeature, CardsState } from "../../../card/state/cards.state";
 })
 export class GroupListComponent implements OnInit {
   @Input() groupList!: GroupList;
-  cards$!: Observable<Card[]>;
-  anotherLists$!: Observable<GroupListInfo[]>;
-  priorities$!: Observable<Priority[]>;
+  public cards$!: Observable<Card[]>;
+  public anotherLists$!: Observable<GroupListInfo[]>;
+  public priorities$!: Observable<Priority[]>;
+
+  public editListForm!: FormGroup;
+  private createCardForm!: FormGroup;
+  public editRequested = false;
 
   constructor(private readonly formsService: FormsService,
-              private readonly groupListsStore: Store<GroupListsState>,
-              private readonly prioritiesStore: Store<PrioritiesState>,
-              private readonly cardsStore: Store<CardsState>
+              private readonly store: Store<GroupListsState>,
+              private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.cards$ = this.cardsStore
+    this.cards$ = this.store
       .select(
         CardsFeature.selectCardsByListId(this.groupList.id)
       );
 
-    this.anotherLists$ = this.groupListsStore
+    this.anotherLists$ = this.store
       .select(
         GroupListsFeature.selectAnotherGroupLists(this.groupList.id)
       );
 
-    this.priorities$ = this.prioritiesStore
+    this.priorities$ = this.store
       .select(PrioritiesFeature.selectAll);
+
+    this.editListForm = this.formsService.createGroupListForm({ name: this.groupList.name });
   }
 
-  protected editForm!: FormGroup;
-  protected editRequested = false;
-
   protected onCreateCard() {
+    const dialogRef = this.dialog.open(CardModalComponent, {
+      height: '600px',
+      width: '600px',
+      data: {
+        title: "Create card",
+        form: this.formsService.createCardForm({ groupId: this.groupList.id })
+      }
+    })
+      .afterClosed()
+      .subscribe(data => {
+        if (data !== undefined) {
+          this.store.dispatch(CardsActions.apiAddCard({ card: data }));
+        }
+      });
   }
 
   protected onNextCards() {
@@ -79,15 +99,21 @@ export class GroupListComponent implements OnInit {
   }
 
   protected onDelete() {
+    this.store.dispatch(GroupListsActions.apiDeleteList({ listId: this.groupList.id }));
   }
 
   protected onSaveEdit() {
-
+    this.store.dispatch(GroupListsActions.apiUpdateList({
+      id: this.groupList.id,
+      changes: {
+        name: this.editListForm.value.name
+      }
+    }));
     this.editRequested = false;
   }
 
   protected onCancelEdit() {
-    this.editForm.reset({ groupName: this.groupList.name });
+    this.editListForm.reset({ groupName: this.groupList.name });
     this.editRequested = false;
   }
 }

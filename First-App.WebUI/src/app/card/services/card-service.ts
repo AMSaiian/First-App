@@ -12,15 +12,14 @@ export class CardService {
   public createCard(newCard: Partial<Card>) {
     return this.http.post<number>(this.apiEndpoints.createCard(), {
       ...newCard,
-      dueDate: newCard.dueDate?.toISOString().split('T')[0]
     });
   }
 
   public updateCard(id: number, changes: Partial<Card>) {
     return this.http.put(this.apiEndpoints.updateCard(id), {
       ...changes,
-      dueDate: changes.dueDate?.toISOString().split('T')[0]
-    });
+      id,
+    } as Partial<Card>);
   }
 
   public deleteCard(cardId: number) {

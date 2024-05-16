@@ -56,7 +56,7 @@ export class BoardService {
   }
 
   public updateBoard(id: number, board: Partial<Board>) {
-    return this.http.put(this.apiEndpoints.updateBoard(id), board);
+    return this.http.put(this.apiEndpoints.updateBoard(id), { ...board, id } as Partial<Board>);
   }
 
   public deleteBoard(id: number) {

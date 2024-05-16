@@ -44,8 +44,6 @@ import { MatDialog } from "@angular/material/dialog";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'First-App.WebUI';
-
   private unsubscribe$ = new Subject<void>;
   public boards$!: Observable<Board[]>
 

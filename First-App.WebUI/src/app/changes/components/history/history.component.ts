@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { concatMap, Observable } from "rxjs";
+import { mergeMap, Observable } from "rxjs";
 import { AsyncPipe, NgForOf, NgIf } from "@angular/common";
 import { CardFormComponent } from "../../../card/components/card-form/card-form.component";
 import { MAT_DIALOG_DATA, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
@@ -50,7 +50,7 @@ export class HistoryComponent implements OnInit {
     this.changes$ = this.changesStore
       .select(ChangesFeature.selectCurrentPage)
       .pipe(
-        concatMap(currentPageNum => {
+        mergeMap(currentPageNum => {
           this.changesStore.dispatch(ChangesActions.apiGetBoardChanges({
             boardId: this.data.boardId,
             paginationContext: {

@@ -26,7 +26,7 @@ export class GroupListService {
   }
 
   public updateList(id: number, changes: Partial<GroupList>) {
-    return this.http.put(this.apiEndpoints.updateGroupList(id), changes);
+    return this.http.put(this.apiEndpoints.updateGroupList(id), { ...changes, id } as Partial<GroupList>);
   }
 
   public deleteList(id: number) {
