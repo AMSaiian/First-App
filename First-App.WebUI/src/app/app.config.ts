@@ -17,13 +17,14 @@ import { GroupListsEffects } from "./group-list/state/group-lists.effects";
 import { PrioritiesEffects } from "./priorities/state/priorities.effects";
 import { provideHttpClient } from "@angular/common/http";
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { ErrorsEffects } from "./common/effects/errors.effects";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideEffects(BoardsEffects, CardsEffects, ChangesEffects, GroupListsEffects, PrioritiesEffects),
+    provideEffects(BoardsEffects, CardsEffects, ChangesEffects, GroupListsEffects, PrioritiesEffects, ErrorsEffects),
     provideStore(),
     provideState(BoardsFeature),
     provideState(CardsFeature),

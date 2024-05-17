@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Card } from "../../card/state/card.model";
 import { GroupList } from "../../group-list/state/group-list.model";
 import { sameValueValidator } from "../validators/same-value-validator";
+import { Board } from "../../board/state/board.model";
 
 @Injectable({ providedIn: "root" })
 export class FormsService {
@@ -42,6 +43,24 @@ export class FormsService {
   }
 
   public createGroupListForm(initialValues: Partial<GroupList>): FormGroup {
+    let validators = [
+      Validators.required,
+      Validators.maxLength(300)
+    ]
+
+    if (initialValues.name) {
+      validators.push(sameValueValidator(initialValues.name));
+    }
+
+    return this.builder.group({
+      name: [
+        initialValues.name,
+        validators
+      ]
+    });
+  }
+
+  public createBoardForm(initialValues: Partial<Board>): FormGroup {
     let validators = [
       Validators.required,
       Validators.maxLength(300)

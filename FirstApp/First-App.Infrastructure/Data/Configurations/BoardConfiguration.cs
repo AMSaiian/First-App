@@ -1,4 +1,5 @@
 ﻿using First_App.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace First_App.Infrastructure.Data.Configurations;
@@ -20,6 +21,7 @@ public class BoardConfiguration : BaseEntityConfiguration<Board>
         builder.HasMany(board => board.Changes)
             .WithOne(change => change.AffectedBoard)
             .HasForeignKey(change => change.AffectedBoardId)
-            .IsRequired(true);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

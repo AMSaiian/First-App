@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { AsyncPipe, NgClass, NgForOf, NgIf } from "@angular/common";
 import { GroupListComponent } from "./group-list/components/group-list/group-list.component";
 import { FilterPipe } from "./common/pipes/filter-pipe";
 import { HttpClientModule } from "@angular/common/http";
 import { GroupListService } from "./group-list/services/group-list-service";
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { ApiEndpointsService } from "./common/services/api-endpoints-service";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatButtonModule } from "@angular/material/button";
@@ -21,7 +21,9 @@ import { BoardsFeature } from "./board/state/boards.state";
 import { BoardsActions } from "./board/state/boards.actions";
 import { PrioritiesActions } from "./priorities/state/priorities.actions";
 import { Board } from "./board/state/board.model";
-import { MatDialog } from "@angular/material/dialog";
+import { FormsService } from "./common/services/forms-service";
+import { FormGroup } from "@angular/forms";
+import { BoardFormComponent } from "./board/components/board-form/board-form.component";
 
 @Component({
   selector: 'app-root',
@@ -30,7 +32,7 @@ import { MatDialog } from "@angular/material/dialog";
     RouterOutlet, AsyncPipe, GroupListComponent,
     FilterPipe, NgForOf, NgIf, HttpClientModule,
     MatGridListModule, NgClass, MatButtonModule,
-    MatIconModule, GroupListFormComponent, MatMenu, MatMenuItem, RouterLink, RouterLinkActive,
+    MatIconModule, GroupListFormComponent, MatMenu, MatMenuItem, RouterLink, RouterLinkActive, BoardFormComponent,
   ],
   providers: [
     GroupListService,
@@ -43,24 +45,39 @@ import { MatDialog } from "@angular/material/dialog";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>;
-  public boards$!: Observable<Board[]>
+export class AppComponent implements OnInit {
+  public boards$!: Observable<Board[]>;
+  public createBoardForm!: FormGroup;
+  public createBoardRequested = false;
 
   constructor(private readonly store: Store,
-              private readonly paginationService: PaginationSizeService,
-              private readonly dialog: MatDialog
+              private readonly formsService: FormsService
   ) {}
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
 
   ngOnInit(): void {
     this.store.dispatch(PrioritiesActions.apiGetPriorities());
     this.store.dispatch(BoardsActions.apiGetBoards());
 
     this.boards$ = this.store.select(BoardsFeature.selectAll);
+    this.createBoardForm = this.formsService.createBoardForm({});
+  }
+
+  public onCreateBoardRequested() {
+    this.createBoardRequested = true;
+  }
+
+  public onCreateBoard() {
+    this.store.dispatch(BoardsActions.apiAddBoard({
+      board: {
+        name: this.createBoardForm.value.name
+      }
+    }))
+    this.createBoardForm.reset();
+    this.createBoardRequested = false;
+  }
+
+  public onCancelCreateBoard() {
+    this.createBoardForm.reset();
+    this.createBoardRequested = false;
   }
 }

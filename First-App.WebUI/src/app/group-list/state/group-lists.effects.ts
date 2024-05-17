@@ -4,7 +4,7 @@ import { concatLatestFrom } from "@ngrx/operators";
 import { GroupListService } from "../services/group-list-service";
 import { ErrorsService } from "../../common/services/errors-service";
 import { GroupListsActions } from "./group-lists.actions";
-import { catchError, EMPTY, exhaustMap, filter, map } from "rxjs";
+import { catchError, exhaustMap, filter, map, of } from "rxjs";
 import { Update } from "@ngrx/entity";
 import { GroupList } from "./group-list.model";
 import { Store } from "@ngrx/store";
@@ -12,6 +12,7 @@ import { GroupListsFeature } from "./group-lists.state";
 import { BoardsActions } from "../../board/state/boards.actions";
 import { CardsActions } from "../../card/state/cards.actions";
 import { CardsFeature } from "../../card/state/cards.state";
+import { ErrorsActions } from "../../common/actions/errors.actions";
 
 @Injectable({ providedIn: "root" })
 export class GroupListsEffects {
@@ -19,7 +20,7 @@ export class GroupListsEffects {
   constructor(private readonly store: Store,
               private readonly actions$: Actions,
               private readonly groupListService: GroupListService,
-              private readonly errorService: ErrorsService
+              private readonly errorsService: ErrorsService
   ) {}
 
   public readonly apiAddList$ = createEffect(() =>
@@ -30,10 +31,13 @@ export class GroupListsEffects {
           map(data => GroupListsActions.addList({
             groupList: {
               ...props.groupList,
+              currentPage: 1,
+              cardsAmount: 0,
+              hasNextCards: false,
               id: data
             } as GroupList
           })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -50,7 +54,7 @@ export class GroupListsEffects {
               changes: props.changes
             }
           })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -62,7 +66,7 @@ export class GroupListsEffects {
       exhaustMap(props => this.groupListService.deleteList(props.listId)
         .pipe(
           map(() => GroupListsActions.deleteList({ listId: props.listId })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -81,7 +85,7 @@ export class GroupListsEffects {
       exhaustMap(props => this.groupListService.getGroupListCards(props.listId, props.paginationContext)
         .pipe(
           map(cards => GroupListsActions.postApiGetListCards({ listId: props.listId, paginatedCards: cards })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )

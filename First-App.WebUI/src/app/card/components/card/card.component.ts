@@ -52,7 +52,7 @@ export class CardComponent {
       height: '600px',
       width: '600px',
       data: {
-        title: "Create card",
+        title: "Edit card",
         form: this.formsService.createCardForm(this.card)
       }
     })

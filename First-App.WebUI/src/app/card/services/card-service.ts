@@ -12,6 +12,7 @@ export class CardService {
   public createCard(newCard: Partial<Card>) {
     return this.http.post<number>(this.apiEndpoints.createCard(), {
       ...newCard,
+      dueDate: newCard.dueDate?.toISOString().split("T")[0]
     });
   }
 
@@ -19,6 +20,7 @@ export class CardService {
     return this.http.put(this.apiEndpoints.updateCard(id), {
       ...changes,
       id,
+      dueDate: changes.dueDate?.toISOString().split("T")[0]
     } as Partial<Card>);
   }
 

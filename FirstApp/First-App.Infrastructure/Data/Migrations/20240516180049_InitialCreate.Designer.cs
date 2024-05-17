@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace First_App.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240512181527_InitialCreate")]
+    [Migration("20240516180049_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -232,8 +232,7 @@ namespace First_App.Infrastructure.Data.Migrations
                     b.HasOne("First_App.Core.Entities.Board", "AffectedBoard")
                         .WithMany("Changes")
                         .HasForeignKey("AffectedBoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("First_App.Core.Entities.Card", "AffectedCard")
                         .WithMany("ChangeHistory")

@@ -1,7 +1,7 @@
 ﻿import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { CardsActions } from "./cards.actions";
-import { catchError, EMPTY, exhaustMap, map } from "rxjs";
+import { catchError, exhaustMap, map, of } from "rxjs";
 import { ErrorsService } from "../../common/services/errors-service";
 import { CardService } from "../services/card-service";
 import { Card } from "./card.model";
@@ -10,6 +10,7 @@ import { GroupListsActions } from "../../group-list/state/group-lists.actions";
 import { concatLatestFrom } from "@ngrx/operators";
 import { Store } from "@ngrx/store";
 import { CardsFeature } from "./cards.state";
+import { ErrorsActions } from "../../common/actions/errors.actions";
 
 @Injectable({ providedIn: "root" })
 export class CardsEffects {
@@ -26,7 +27,7 @@ export class CardsEffects {
       exhaustMap(props => this.cardService.createCard(props.card)
         .pipe(
           map(data => CardsActions.addCard({ card: { ...props.card, id: data } as Card })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -42,7 +43,8 @@ export class CardsEffects {
               id: props.id,
               changes: props.changes
             }
-          }))
+          })),
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -54,7 +56,7 @@ export class CardsEffects {
       exhaustMap(props => this.cardService.deleteCard(props.cardId)
         .pipe(
           map(() => CardsActions.beforeDeleteCard({ cardId: props.cardId })),
-          catchError(error => EMPTY)
+          catchError(error => of(ErrorsActions.raiseError({ message: this.errorsService.humaniseError(error.error) })))
         )
       )
     )
@@ -73,6 +75,13 @@ export class CardsEffects {
       map(props => CardsActions.deleteCard({ cardId: props.cardId }))
     )
   );
+
+  public readonly postApiGetListCards$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GroupListsActions.postApiGetListCards),
+      map(props => CardsActions.addCards({ cards: props.paginatedCards.entities }))
+    )
+  )
 
   public readonly postApiGetBoardsWithLists$ = createEffect(() =>
     this.actions$.pipe(

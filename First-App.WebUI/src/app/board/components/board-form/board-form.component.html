@@ -1,0 +1,27 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSaved()"
+  [ngClass]="'edit-board-form'">
+  <mat-form-field class="board-name-field">
+    <input matInput type="text" placeholder="Board name" formControlName="name" />
+    <mat-error *ngIf="form.get('name')?.errors?.['required']">Name is required</mat-error>
+    <mat-error *ngIf="form.get('name')?.errors?.['maxlength']">Name must be less than 300 characters</mat-error>
+    <mat-error *ngIf="form.get('name')?.errors?.['sameAsPrevious']">Name must be different from the initial one</mat-error>
+  </mat-form-field>
+  <div class="edit-buttons-wrapper">
+    <button mat-flat-button color="primary"
+            class="edit-board-button"
+            [color]="'primary'"
+            [type]="'submit'"
+            [disabled]="!form.valid">
+      Save
+    </button>
+    <button mat-flat-button
+            [color]="'warn'"
+            class="edit-board-button"
+            [type]="'button'"
+            (click)="onCancelEdit()">
+      Cancel
+    </button>
+  </div>
+</form>

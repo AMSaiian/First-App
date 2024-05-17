@@ -4,3 +4,16 @@
   flex-direction: column;
   margin: 1%;
 }
+
+.board-navbar {
+  display: flex;
+  margin-left: 1%;
+}
+
+.board-navbar-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding: 0;
+}

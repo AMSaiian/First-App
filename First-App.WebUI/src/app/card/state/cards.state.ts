@@ -13,7 +13,12 @@ export const CardsFeature = createFeature({
   name: "cards",
   reducer: createReducer(
     initialState,
-    on(CardsActions.addCards, (state, { cards }) => adapter.setMany(cards, state)),
+    on(CardsActions.addCards, (state, { cards }) =>
+      adapter.setMany(cards.map(card => ({
+          ...card,
+          dueDate: new Date(card.dueDate)
+      })), state)
+    ),
     on(CardsActions.addCard, (state, { card }) => adapter.addOne(card, state)),
     on(CardsActions.deleteCard, (state, { cardId }) => adapter.removeOne(cardId, state)),
     on(CardsActions.deleteCards, (state, { cardIds }) => adapter.removeMany(cardIds, state)),

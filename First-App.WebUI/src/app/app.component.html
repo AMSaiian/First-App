@@ -1,6 +1,30 @@
-<nav>
-  <ul *ngFor="let board of boards$ | async">
-    <li><a routerLink="/boards/{{board.id}}" routerLinkActive="active" ariaCurrentWhenActive="page">{{board.name}}</a></li>
+<nav class="board-navbar">
+  <ul class="board-navbar-list">
+    <li *ngFor="let board of boards$ | async">
+      <button mat-button
+      [routerLink]="['/boards', board.id]">
+        <mat-icon>dashboard</mat-icon>
+        <h1>{{board.name}}</h1>
+      </button>
+    </li>
+    <li>
+      <ng-container *ngIf="!createBoardRequested; else createBoard">
+        <button mat-button
+                (click)="onCreateBoardRequested()"
+                class="new-group-list-button">
+          <h1>Add new board</h1>
+          <mat-icon>add</mat-icon>
+        </button>
+      </ng-container>
+
+      <ng-template #createBoard>
+        <app-board-form
+          [form]="createBoardForm"
+          (saved)="onCreateBoard()"
+          (cancelled)="onCancelCreateBoard()"
+        />
+      </ng-template>
+    </li>
   </ul>
 </nav>
 

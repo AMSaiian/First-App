@@ -11,7 +11,7 @@ import { GroupList } from "../../state/group-list.model";
 import { GroupListInfo } from "../../state/group-list-info";
 import { GroupListsActions } from "../../state/group-lists.actions"
 import { Priority } from "../../../priorities/state/priority.model";
-import { Observable } from "rxjs";
+import { Observable, take } from "rxjs";
 import { GroupListsFeature, GroupListsState } from "../../state/group-lists.state";
 import { Store } from "@ngrx/store";
 import { FilterPipe } from "../../../common/pipes/filter-pipe";
@@ -21,6 +21,7 @@ import { CardsFeature, CardsState } from "../../../card/state/cards.state";
 import { MatDialog } from "@angular/material/dialog";
 import { CardModalComponent } from "../../../card/components/card-modal/card-modal.component";
 import { CardsActions } from "../../../card/state/cards.actions";
+import { PaginationSizeService } from "../../../common/services/pagination-size-service";
 
 @Component({
   selector: 'app-group-list',
@@ -54,7 +55,8 @@ export class GroupListComponent implements OnInit {
 
   constructor(private readonly formsService: FormsService,
               private readonly store: Store<GroupListsState>,
-              private readonly dialog: MatDialog
+              private readonly dialog: MatDialog,
+              private readonly paginationService: PaginationSizeService
   ) {}
 
   ngOnInit(): void {
@@ -92,6 +94,17 @@ export class GroupListComponent implements OnInit {
   }
 
   protected onNextCards() {
+    this.store.select(
+      GroupListsFeature.selectGroupListById(this.groupList.id)
+    ).pipe(take(1)).subscribe(groupList => {
+      this.store.dispatch(GroupListsActions.apiGetListCards({
+        listId: this.groupList.id,
+        paginationContext: {
+          pageNum: groupList!.currentPage + 1,
+          pageSize: this.paginationService.getCardsInGroupListAmount()
+        }
+      }))
+    });
   }
 
   protected onEdit() {
