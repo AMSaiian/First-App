@@ -11,7 +11,7 @@
     </button>
     <mat-menu #menu="matMenu" xPosition="before">
       <button mat-menu-item
-              (click)="onCardEditRequested()">
+              (click)="onCardEdit()">
         <mat-icon>edit</mat-icon>
         <span>Edit</span>
       </button>
@@ -36,7 +36,7 @@
   </mat-card-content>
   <div class="move-to-wrapper">
     <mat-card-actions>
-      <mat-select placeholder="Move to" [(ngModel)]="nextListId" (selectionChange)="onChangedList()">
+      <mat-select placeholder="Move to" (selectionChange)="onChangedList($event.value)">
         <ng-container *ngFor="let anotherList of anotherLists">
           <mat-option [value]="anotherList.id">{{anotherList.name}}</mat-option>
         </ng-container>

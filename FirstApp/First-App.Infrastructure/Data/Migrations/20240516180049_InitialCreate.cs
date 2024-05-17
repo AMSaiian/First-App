@@ -120,7 +120,7 @@ namespace First_App.Infrastructure.Data.Migrations
                         column: x => x.AffectedBoardId,
                         principalTable: "Boards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Changes_Cards_AffectedCardId",
                         column: x => x.AffectedCardId,

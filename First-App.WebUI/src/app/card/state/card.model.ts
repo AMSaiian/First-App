@@ -7,7 +7,7 @@
   groupId: number
 }
 
-export function compareCards(a: Card, b: Card) {
+export function compareCards(a: Card, b: Card): number {
   if (a.dueDate > b.dueDate) {
     return 1;
   }

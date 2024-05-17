@@ -229,8 +229,7 @@ namespace First_App.Infrastructure.Data.Migrations
                     b.HasOne("First_App.Core.Entities.Board", "AffectedBoard")
                         .WithMany("Changes")
                         .HasForeignKey("AffectedBoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("First_App.Core.Entities.Card", "AffectedCard")
                         .WithMany("ChangeHistory")
