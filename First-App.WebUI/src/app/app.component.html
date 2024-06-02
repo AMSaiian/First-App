@@ -1,56 +1,31 @@
-<div class="task-board-header">
-  <h1>
-    My Task Board
-  </h1>
-  <button mat-raised-button (click)="onViewHistoryRequested()">
-    <mat-icon>schedule</mat-icon>
-    History
-  </button>
-</div>
-
-<div class="group-lists-wrapper">
-
-  <ng-container *ngIf="{
-      groupLists: groupLists$ | async,
-      cards: cards$ | async,
-      priorities: priorities$ | async
-    } as data">
-    <ng-container *ngFor="let groupList of data.groupLists?.sort(compareGroupLists)">
-      <app-group-list
-        [groupList]="groupList"
-        [cards]="(data.cards! | filter: { groupId: groupList.id }).sort(compareCards).reverse()"
-        [priorities]="data.priorities!"
-        [anotherLists]="(data.groupLists! | filter: excludeGroupListById(groupList.id)).sort(compareGroupLists)"
-        [ngClass]="'group-list-wrapper'"
-        (createCardRequested)="onCardCreateRequested($event)"
-        (cardInListUpdated)="onCardUpdated($event)"
-        (newCardsRequested)="onNextCardsForGroupListRequested($event)"
-        (groupListDeleted)="onGroupListDeleted($event)"
-        (groupListUpdated)="onGroupListUpdated($event)"
-        (cardInListDeleted)="onCardDeleted($event)"
-        (cardInListRequestedEdit)="onCardEditRequested($event)">
-      </app-group-list>
-    </ng-container>
-  </ng-container>
-
-  <div class="new-list-wrapper">
-    <div class="new-group-list-header">
-      <ng-container *ngIf="!createListRequested; else create">
+<nav class="board-navbar">
+  <ul class="board-navbar-list">
+    <li *ngFor="let board of boards$ | async">
+      <button mat-button
+      [routerLink]="['/boards', board.id]">
+        <mat-icon>dashboard</mat-icon>
+        <h1>{{board.name}}</h1>
+      </button>
+    </li>
+    <li>
+      <ng-container *ngIf="!createBoardRequested; else createBoard">
         <button mat-button
-                (click)="onCreateListRequested()"
+                (click)="onCreateBoardRequested()"
                 class="new-group-list-button">
-          <h2>Add new group list</h2>
+          <h1>Add new board</h1>
           <mat-icon>add</mat-icon>
         </button>
       </ng-container>
 
-      <ng-template #create>
-        <app-group-list-form
-          [form]="createListForm"
-          (saved)="onCreateList()"
-          (cancelled)="onCancelCreateList()"
+      <ng-template #createBoard>
+        <app-board-form
+          [form]="createBoardForm"
+          (saved)="onCreateBoard()"
+          (cancelled)="onCancelCreateBoard()"
         />
       </ng-template>
-    </div>
-  </div>
-</div>
+    </li>
+  </ul>
+</nav>
+
+<router-outlet></router-outlet>

@@ -10,5 +10,8 @@ public class CreateGroupListCommandValidator : AbstractValidator<CreateGroupList
         RuleFor(command => command.Name)
             .NotEmpty()
             .MaximumLength(DataSchemeConstants.MaxNameLength);
+
+        RuleFor(command => command.BoardId)
+            .NotEmpty();
     }
 }

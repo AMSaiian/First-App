@@ -6,6 +6,13 @@ namespace First_App.Infrastructure.Data.Seeding;
 
 public static class TestDataSeeder
 {
+    private static readonly List<Board> Boards =
+    [
+        new() { Name = "Board1" },
+        new() { Name = "Board2" },
+        new() { Name = "Board3" }
+    ];
+
     private static readonly string CardDescription =
         """
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
@@ -17,9 +24,9 @@ public static class TestDataSeeder
 
     private static readonly List<GroupList> GroupLists =
     [
-        new() { Name = "List1" },
-        new() { Name = "List2" },
-        new() { Name = "List3" }
+        new() { Name = "List1", BoardId = 1 },
+        new() { Name = "List2", BoardId = 1 },
+        new() { Name = "List3", BoardId = 1 }
     ];
 
     private static readonly List<Card> Cards =
@@ -43,6 +50,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -71,6 +79,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -99,6 +108,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(0).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -127,6 +137,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -156,6 +167,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -184,6 +196,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -212,6 +225,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -240,6 +254,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(0).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -268,6 +283,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -297,6 +313,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -325,6 +342,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -353,6 +371,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -381,6 +400,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(0).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -409,6 +429,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-10).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -438,6 +459,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -466,6 +488,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -495,6 +518,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -523,6 +547,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-5).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -551,6 +576,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -580,6 +606,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-1).ToUniversalTime(),
                     TypeId = 1,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -598,6 +625,7 @@ public static class TestDataSeeder
                 {
                     Time = DateTime.Now.AddDays(-2).ToUniversalTime(),
                     TypeId = 2,
+                    AffectedBoardId = 1,
                     Parameters =
                     [
                         new()
@@ -622,6 +650,7 @@ public static class TestDataSeeder
         {
             AffectedCardId = 1,
             TypeId = 1,
+            AffectedBoardId = 1,
             Time = DateTime.Now.AddHours(-8).ToUniversalTime(),
             Parameters =
             [
@@ -641,6 +670,7 @@ public static class TestDataSeeder
         {
             AffectedCardId = 1,
             TypeId = 3,
+            AffectedBoardId = 1,
             Time = DateTime.Now.AddHours(-8).ToUniversalTime(),
             Parameters =
             [
@@ -660,6 +690,7 @@ public static class TestDataSeeder
         {
             AffectedCardId = 1,
             TypeId = 3,
+            AffectedBoardId = 1,
             Time = DateTime.Now.AddHours(-7).ToUniversalTime(),
             Parameters =
             [
@@ -681,9 +712,13 @@ public static class TestDataSeeder
     {
         await dbContext.Database.EnsureCreatedAsync();
 
-        if (await dbContext.GroupLists.CountAsync() == 0
+        if (await dbContext.Boards.CountAsync() == 0
+         && await dbContext.GroupLists.CountAsync() == 0
          && await dbContext.Cards.CountAsync() == 0)
         {
+            await dbContext.Boards.AddRangeAsync(Boards);
+            await dbContext.SaveChangesAsync();
+
             await dbContext.GroupLists.AddRangeAsync(GroupLists);
             await dbContext.SaveChangesAsync();
 

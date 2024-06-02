@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using First_App.Application.Commands.GroupList.Create;
 using First_App.Application.Common.Dtos;
-using First_App.Application.Common.Dtos.Pagination;
 using First_App.Core.Entities;
 
 namespace First_App.Application.Common.Mapping;

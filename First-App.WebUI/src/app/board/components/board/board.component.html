@@ -1,0 +1,81 @@
+<div class="task-board-header">
+  <ng-container *ngIf="!editBoardRequested; else edit">
+    <div class="task-board-name">
+      <h1 *ngIf="board$ | async as board">
+        {{board.name}}
+      </h1>
+      <div class="task-board-menu">
+        <button mat-icon-button
+                class="icon-button-small"
+                [matMenuTriggerFor]="menu"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item
+                  (click)="onEditBoardRequested()">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item
+                  (click)="onDeleteBoard()">
+            <mat-icon color="warn">delete</mat-icon>
+            <span class="unsafe">Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #edit>
+    <app-board-form
+      class="edit-board-form"
+      [form]="editBoardForm"
+      (saved)="onEditBoard()"
+      (cancelled)="onCancelEditBoard()"
+    />
+  </ng-template>
+
+  <div class="task-board-history">
+    <button mat-raised-button (click)="onViewHistory()">
+      <mat-icon>schedule</mat-icon>
+      History
+    </button>
+  </div>
+</div>
+
+
+<div class="group-lists-wrapper">
+
+  <ng-container *ngIf="{
+      groupLists: groupLists$ | async,
+    } as data">
+    <ng-container *ngFor="let groupList of data.groupLists">
+      <app-group-list
+        [groupList]="groupList"
+        [ngClass]="'group-list-wrapper'">
+      </app-group-list>
+    </ng-container>
+  </ng-container>
+
+  <div class="new-list-wrapper">
+    <div class="new-group-list-header">
+      <ng-container *ngIf="!createListRequested; else createGroupList">
+        <button mat-button
+                (click)="onCreateListRequested()"
+                class="new-group-list-button">
+          <h2>Add new group list</h2>
+          <mat-icon>add</mat-icon>
+        </button>
+      </ng-container>
+
+      <ng-template #createGroupList>
+        <app-group-list-form
+          [form]="createListForm"
+          (saved)="onCreateList()"
+          (cancelled)="onCancelCreateList()"
+        />
+      </ng-template>
+    </div>
+  </div>
+</div>

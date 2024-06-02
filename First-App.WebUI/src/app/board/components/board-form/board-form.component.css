@@ -1,0 +1,22 @@
+:host,
+.edit-board-form {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  align-items: flex-start;
+}
+
+.board-name-field {
+  margin-bottom: 1%;
+  margin-right: 1%;
+}
+
+.edit-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.edit-group-button {
+  width: 48%;
+}

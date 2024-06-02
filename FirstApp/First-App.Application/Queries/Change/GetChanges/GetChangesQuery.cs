@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace First_App.Application.Queries.Change.GetChanges;
 
-public record GetChangesQuery(PaginationContext? PaginationContext)
+public record GetChangesQuery(int BoardId, PaginationContext? PaginationContext)
     : IRequest<Result<Paginated<ChangeDto>>>;
 
 public class GetChangesHandler(AppDbContext context, IMapper mapper)
@@ -23,7 +23,15 @@ public class GetChangesHandler(AppDbContext context, IMapper mapper)
     public async Task<Result<Paginated<ChangeDto>>> Handle(GetChangesQuery request,
                                                            CancellationToken cancellationToken)
     {
+        bool isBoardExists = await _context.Boards
+            .AnyAsync(board => board.Id == request.BoardId,
+                      cancellationToken);
+
+        if (!isBoardExists)
+            return Result<Paginated<ChangeDto>>.Conflict(nameof(Board));
+
         var changesQuery = _context.Changes
+            .Where(c => c.AffectedBoardId == request.BoardId)
             .Include(c => c.Type)
             .Include(c => c.Parameters)
             .AsNoTracking();

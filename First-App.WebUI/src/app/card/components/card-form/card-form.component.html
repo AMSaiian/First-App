@@ -6,9 +6,9 @@
       Card name
     </mat-label>
     <mat-form-field class="card-form-input">
-      <input matInput type="text" placeholder="Card name" formControlName="cardName" />
-      <mat-error *ngIf="form.get('cardName')?.errors?.['required']">Name is required</mat-error>
-      <mat-error *ngIf="form.get('cardName')?.errors?.['maxlength']">Name must be less than 300 characters</mat-error>
+      <input matInput type="text" placeholder="Card name" formControlName="name" />
+      <mat-error *ngIf="form.get('name')?.errors?.['required']">Name is required</mat-error>
+      <mat-error *ngIf="form.get('name')?.errors?.['maxlength']">Name must be less than 300 characters</mat-error>
     </mat-form-field>
   </div>
 

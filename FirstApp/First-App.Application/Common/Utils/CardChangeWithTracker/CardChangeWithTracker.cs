@@ -49,6 +49,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
         entity.ChangeHistory
             .Add(await BuildChange(
                      ChangeCardConstants.CreateCard,
+                     groupEntity.BoardId,
                      cancellationToken,
                      changeParameters)
             );
@@ -62,6 +63,10 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
     {
         bool isChanged = false;
         List<string> conflictErrorList = [];
+        await _context.Cards
+            .Entry(entity)
+            .Reference(entry => entry.Group)
+            .LoadAsync(cancellationToken);
 
         if (updateEntity.Name is not null
          && entity.Name != updateEntity.Name)
@@ -141,12 +146,14 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
         entity.ChangeHistory
             .Add(await BuildChange(
                      ChangeCardConstants.DeleteCard,
+                     groupEntity.BoardId,
                      cancellationToken,
                      changeParameters)
             );
     }
 
     private async Task<Change> BuildChange(string changeTypeName,
+                                           int affectedBoardId,
                                            CancellationToken cancellationToken,
                                            params ChangeParameter[] parameters)
     {
@@ -161,6 +168,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
         {
             Time = DateTime.Now.ToUniversalTime(),
             Type = changeType,
+            AffectedBoardId = affectedBoardId
         };
 
         updateChange.Parameters.AddRange(parameters);
@@ -180,6 +188,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
         entity.ChangeHistory.Add(await BuildChange(
                                      ChangeCardConstants.UpdateName,
+                                     entity.Group!.BoardId,
                                      cancellationToken,
                                      changeParameters)
         );
@@ -200,6 +209,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
         entity.ChangeHistory.Add(await BuildChange(
                                      ChangeCardConstants.UpdateDescription,
+                                     entity.Group!.BoardId,
                                      cancellationToken,
                                      changeParameters));
 
@@ -225,12 +235,13 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
             new()
             {
                 Name = ChangeCardParametersNames.NewValue,
-                Value = newDueDate.ToString(CultureInfo.InvariantCulture)!
+                Value = newDueDate.ToString(CultureInfo.InvariantCulture)
             }
         ];
 
         entity.ChangeHistory.Add(await BuildChange(
                                      ChangeCardConstants.UpdateDueDate,
+                                     entity.Group!.BoardId,
                                      cancellationToken,
                                      changeParameters)
         );
@@ -275,6 +286,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
         entity.ChangeHistory.Add(await BuildChange(
                                      ChangeCardConstants.UpdatePriority,
+                                     entity.Group!.BoardId,
                                      cancellationToken,
                                      changeParameters)
         );
@@ -300,6 +312,9 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
             .Reference(c => c.Group)
             .LoadAsync(cancellationToken);
 
+        if (newGroupListEntity.BoardId != entity.Group!.BoardId)
+            return Result.Error(ErrorIdentifiers.CardChangeBoardRestricted);
+
         ChangeParameter[] changeParameters =
         [
             new()
@@ -321,6 +336,7 @@ public class CardChangeWithTracker(AppDbContext context) : ICardChangeWithTracke
 
         entity.ChangeHistory.Add(await BuildChange(
                                      ChangeCardConstants.UpdateGroup,
+                                     entity.Group!.BoardId,
                                      cancellationToken,
                                      changeParameters)
         );

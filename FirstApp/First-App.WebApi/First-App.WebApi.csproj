@@ -7,6 +7,7 @@
         <InvariantGlobalization>true</InvariantGlobalization>
         <RootNamespace>First_App.WebApi</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>f9fb60f4-1a01-4be0-95a1-4cb1696d1b79</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

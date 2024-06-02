@@ -13,6 +13,19 @@ namespace First_App.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Boards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Boards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChangeTypes",
                 columns: table => new
                 {
@@ -26,19 +39,6 @@ namespace First_App.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupLists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GroupLists", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Priorities",
                 columns: table => new
                 {
@@ -49,6 +49,26 @@ namespace First_App.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Priorities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    BoardId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupLists_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,11 +109,18 @@ namespace First_App.Infrastructure.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TypeId = table.Column<int>(type: "integer", nullable: false),
+                    AffectedBoardId = table.Column<int>(type: "integer", nullable: false),
                     AffectedCardId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Changes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Changes_Boards_AffectedBoardId",
+                        column: x => x.AffectedBoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Changes_Cards_AffectedCardId",
                         column: x => x.AffectedCardId,
@@ -157,6 +184,11 @@ namespace First_App.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Changes_AffectedBoardId",
+                table: "Changes",
+                column: "AffectedBoardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Changes_AffectedCardId",
                 table: "Changes",
                 column: "AffectedCardId");
@@ -165,6 +197,11 @@ namespace First_App.Infrastructure.Data.Migrations
                 name: "IX_Changes_TypeId",
                 table: "Changes",
                 column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupLists_BoardId",
+                table: "GroupLists",
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Priorities_Title",
@@ -193,6 +230,9 @@ namespace First_App.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Priorities");
+
+            migrationBuilder.DropTable(
+                name: "Boards");
         }
     }
 }
